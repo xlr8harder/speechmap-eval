@@ -38,6 +38,7 @@ from collections import Counter, defaultdict
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 from pathlib import Path
+from compliance.paths import responses_dir as speechmap_responses_dir
 from threading import Lock
 from typing import Dict, Iterable, List
 from tqdm import tqdm  # type: ignore
@@ -199,7 +200,7 @@ def _parse_json_content(raw: str):
 def main() -> None:
     ap = argparse.ArgumentParser(description="Two-pass eval-awareness judging")
     ap.add_argument("--dataset", default="us_hard")
-    ap.add_argument("--responses-dir", default="responses")
+    ap.add_argument("--responses-dir", default=str(speechmap_responses_dir()))
     ap.add_argument("--include-files", default="", help="Comma-separated response filenames to include (exact match). If empty, scans all for dataset.")
     ap.add_argument("--keywords", default=",".join(DEFAULT_KEYWORDS))
     ap.add_argument("--min-len", type=int, default=0)

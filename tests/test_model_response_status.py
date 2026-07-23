@@ -172,6 +172,50 @@ def test_provider_safety_error_text_is_terminal_moderation():
     assert row.is_frpe_retry_candidate() is False
 
 
+def test_openrouter_nested_content_policy_violation_is_terminal_moderation():
+    row = _response(
+        {
+            "error": {
+                "message": "Provider returned error",
+                "code": 400,
+                "metadata": {
+                    "raw": (
+                        '{"error":{"code":"content_policy_violation",'
+                        '"message":"The response was filtered due to the prompt '
+                        'triggering our content management policy.",'
+                        '"param":"prompt","type":"invalid_request_error"}}'
+                    ),
+                    "provider_name": "Meta",
+                    "is_byok": False,
+                },
+            },
+            "_llm_client": {
+                "success": False,
+                "is_retryable": False,
+                "error_info": {
+                    "type": "api_error",
+                    "status_code": 400,
+                    "message": "Provider returned error",
+                    "raw_response": (
+                        '{"error":{"message":"Provider returned error","code":400,'
+                        '"metadata":{"raw":"{\\"error\\":{\\"code\\":'
+                        '\\"content_policy_violation\\",\\"message\\":'
+                        '\\"The response was filtered due to the prompt triggering '
+                        'our content management policy.\\",\\"param\\":'
+                        '\\"prompt\\",\\"type\\":\\"invalid_request_error\\"}}",'
+                        '"provider_name":"Meta","is_byok":false}}}'
+                    ),
+                },
+            },
+        },
+        model="meta/muse-spark-1.1",
+    )
+
+    assert row.classify_response_status() == ("moderation", "moderation_error_text")
+    assert row.is_original_moderation_error() is True
+    assert row.is_frpe_retry_candidate() is False
+
+
 def test_openai_limited_bio_access_error_text_is_terminal_moderation():
     row = _response(
         {

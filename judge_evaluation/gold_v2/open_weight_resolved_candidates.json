@@ -1,0 +1,65 @@
+{
+  "defaults": {
+    "api_provider": "openrouter",
+    "request_format": "chat_completions",
+    "max_tokens": 4096,
+    "temperature": 0
+  },
+  "candidates": [
+    {
+      "key": "gemma4_31b_venice_no_reasoning",
+      "openrouter_slug": "google/gemma-4-31b-it",
+      "reasoning": {"enabled": false},
+      "provider_routing": {"only": ["Venice"]}
+    },
+    {
+      "key": "gemma4_31b_wandb_reasoning_medium",
+      "openrouter_slug": "google/gemma-4-31b-it",
+      "reasoning": {"enabled": true, "effort": "medium"},
+      "provider_routing": {"only": ["WandB"]}
+    },
+    {
+      "key": "qwen3.6_27b_venice_no_reasoning",
+      "openrouter_slug": "qwen/qwen3.6-27b",
+      "reasoning": {"enabled": false},
+      "provider_routing": {"only": ["Venice"]}
+    },
+    {
+      "key": "qwen3.6_27b_alibaba_reasoning_medium",
+      "openrouter_slug": "qwen/qwen3.6-27b",
+      "reasoning": {"enabled": true, "effort": "medium"},
+      "provider_routing": {"only": ["Alibaba"]}
+    },
+    {
+      "key": "qwen3.6_27b_alibaba_no_reasoning_recovery",
+      "openrouter_slug": "qwen/qwen3.6-27b",
+      "reasoning": {"enabled": false},
+      "provider_routing": {"only": ["Alibaba"]}
+    },
+    {
+      "key": "qwen3.6_35b_a3b_akashml_no_reasoning",
+      "openrouter_slug": "qwen/qwen3.6-35b-a3b",
+      "reasoning": {"enabled": false},
+      "provider_routing": {"only": ["AkashML"]}
+    },
+    {
+      "key": "qwen3.6_35b_a3b_wandb_no_reasoning_recovery",
+      "openrouter_slug": "qwen/qwen3.6-35b-a3b",
+      "max_tokens": 8192,
+      "reasoning": {"enabled": false},
+      "provider_routing": {"only": ["WandB"]}
+    },
+    {
+      "key": "qwen3.6_35b_a3b_parasail_reasoning_medium",
+      "openrouter_slug": "qwen/qwen3.6-35b-a3b",
+      "reasoning": {"enabled": true, "effort": "medium"},
+      "provider_routing": {"only": ["Parasail"]}
+    },
+    {
+      "key": "qwen3.6_35b_a3b_wandb_reasoning_medium_recovery",
+      "openrouter_slug": "qwen/qwen3.6-35b-a3b",
+      "reasoning": {"enabled": true, "effort": "medium"},
+      "provider_routing": {"only": ["WandB"]}
+    }
+  ]
+}

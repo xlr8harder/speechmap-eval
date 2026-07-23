@@ -1,0 +1,44 @@
+name = "speechmap-judge-qwen3.5-0.8b-grpo-hf-dataset-smoke"
+model = "Qwen/Qwen3.5-0.8B"
+
+max_steps = 2
+batch_size = 16
+rollouts_per_example = 2
+learning_rate = 1e-4
+lora_alpha = 16
+
+[sampling]
+max_tokens = 256
+temperature = 0.7
+enable_thinking = false
+
+[[env]]
+id = "xlr8harder/speechmap-judge"
+version = "0.1.5"
+args = { hf_dataset = "xlr8harder/speechmap-judge-rl-test-data", train_split = "train", eval_split = "eval", max_train_examples = 256, max_eval_examples = 40 }
+
+[val]
+interval = 1
+num_examples = 16
+rollouts_per_example = 1
+
+[eval]
+interval = 1
+num_examples = 40
+rollouts_per_example = 1
+eval_base_model = true
+
+[[eval.env]]
+id = "xlr8harder/speechmap-judge"
+version = "0.1.5"
+args = { hf_dataset = "xlr8harder/speechmap-judge-rl-test-data", train_split = "train", eval_split = "eval", max_train_examples = 256, max_eval_examples = 40 }
+num_examples = 40
+rollouts_per_example = 1
+
+[checkpoints]
+interval = 2
+keep_cloud = 1
+
+[adapters]
+interval = 2
+keep_last = 1

@@ -1,207 +1,49 @@
-# LLM Compliance Runbook (New Models)
+# AGENTS.md
 
-This is the end-to-end process for running new models, pushing error counts
-as close to zero as practical, judging compliance, and publishing to Speechmap.
+<!-- Generated for lab workspaces. -->
 
-## Content caution
-- Inputs and outputs can include content that triggers strict API filtering.
-- Avoid viewing large amounts of raw output unless necessary; sample only small
-  snippets for diagnostics.
+This AGENTS guide is intended for end users working in a `prime lab setup` workspace.
 
-## Prereqs
-- Set `OPENROUTER_API_KEY` in the environment.
-- Use `uv run python` for all scripts.
-- Decide the question set (default to `questions/us_hard.jsonl` unless specified).
-- Pick workers (default to `--workers 30`).
-- Ensure the model is resolvable via `model_catalog.jsonl` or pass
-  `--canonical-name`, `--provider`, and `--model` so `ask.py` can extend it.
-- Use longer timeouts for large operations in this repo:
-  - `ask.py` and `judge_compliance.py`: allow at least 60 minutes.
-  - `preprocess.py` in `../speechmap`: allow at least 30 minutes.
-  - `git` operations (add/commit/push): allow longer timeouts due to large files.
-- If not provided, ask:
-  - Whether to run `--reasoning`, `--no-reasoning`, or both. For standard new
-    model work, probe first and run both modes when the model reliably supports
-    both.
-  - The canonical model name (use the API name unless a more specific label is needed).
-  - If unsure, probe with the standardized tool before the full run:
-    - `uv run python tools/probe_reasoning.py --provider openrouter --model <model_id>`
-    - This runs Probe A/B automatically and additional fallback probes when
-      needed, then
-      recommends canonical naming plus the run flags to use.
-  - Default policy: if the probe shows both base and reasoning modes work, run
-    the base mode with `--no-reasoning` and canonical name `<model>`, and run
-    reasoning mode with `--reasoning` and canonical name `<model>-reasoning`.
-    `ask.py` treats missing reasoning as an error when `--reasoning` is used,
-    which helps catch misconfigured OpenRouter subproviders.
+## Shared Best Practices (All Contexts)
 
-## Reasoning mode policy
-- Goal: for models that support both operational modes, maintain a pair:
-  - base mode: `<model>` (non-reasoning)
-  - reasoning mode: `<model>-reasoning`
-  Run the full response, retry, and judge pipeline for both entries when both
-  modes are supported.
-- Important naming distinction:
-  - In this repo, `-reasoning` is usually a local canonical-name suffix, not an
-    API model ID.
-  - For OpenRouter retries/tests/probes, use the actual provider model ID from
-    `model_catalog.jsonl` (or from prior response rows such as `api_model` /
-    `response.model`) rather than assuming the canonical name is callable.
-- Do a cheap mode probe before full runs when behavior is unclear.
-  - Standard command:
-    `uv run python tools/probe_reasoning.py --provider openrouter --model <model_id>`
-  - Probe A (default behavior): no reasoning flags.
-  - Probe B (reasoning enabled): `--reasoning` with no effort override.
-  - Probe C (only if needed): `--reasoning --reasoning-effort medium`.
-- For Anthropic models on OpenRouter, especially Claude Opus 4.7 and later,
-  also probe Anthropic adaptive thinking if normal chat-completions reasoning
-  probes are unclear. These probes must use llm_client
-  `request_format="anthropic_messages"` plus `thinking: {"type": "adaptive"}`
-  paired with `output_config: {"effort": "<level>"}`. Prefer high effort for
-  these new Anthropic adaptive entries unless probing shows another effort is
-  needed. Manual `thinking: {"type": "enabled", "budget_tokens": N}` is
-  rejected by Opus 4.7+ and should not be used for new Anthropic reasoning
-  entries.
-- For `anthropic/claude-opus-4.7-reasoning` on `us_hard`, prior probes showed
-  Chat Completions reasoning and Anthropic Messages `high`/`xhigh` did not
-  reliably expose reasoning on the target prompts. Use Anthropic Messages with
-  `--reasoning --reasoning-effort max --max-tokens 16000` and persist those
-  overrides in `model_catalog.jsonl` so `--detect --frpe` retries preserve the
-  same mode.
-- Prefer provider/model defaults when possible.
-  - If reasoning can be enabled without explicit effort, use that default for
-    `<model>-reasoning`.
-  - Use explicit `--reasoning-effort medium` only when required for reliable
-    reasoning behavior or when defaults are inconsistent.
-- How to verify probe outcomes:
-  - Check response payload for `usage.completion_tokens_details.reasoning_tokens`
-    and/or `message.reasoning` / `message.reasoning_details`.
-  - If `--reasoning` is enabled and no reasoning appears across probes, treat as
-    likely unsupported/misconfigured and do not label as reasoning mode.
-- If the provider exposes only one mode (cannot reliably toggle):
-  - Run only the supported mode.
-  - Keep the canonical/public model name as the base identifier `<model>`.
-  - Do not append `-reasoning` or other mode suffixes when there is no
-    corresponding alternate mode to distinguish it from.
-  - Add a note in Speechmap metadata when useful.
-- Keep naming synchronized everywhere after any rename:
-  - response filename, analysis filename, JSONL `model` field values,
-    `model_catalog.jsonl`, and `../speechmap/model_metadata.json`.
-  - For tracked files, use `git mv` (not plain `mv`) to preserve rename history.
+These points are direct restatements of Verifiers docs so agents can follow the same golden-path workflows.
 
-## Run a new model (responses)
-1) Run the model:
-```bash
-uv run python ask.py \
-  --questions questions/us_hard.jsonl \
-  --provider openrouter \
-  --model <provider_model_id> \
-  --canonical-name <canonical_model_id> \
-  --workers 30 \
-  --reasoning
-```
-For OpenRouter Anthropic Messages runs, add `--request-format anthropic_messages`
-and ensure the catalog or CLI-probe recommendation supplies the corresponding
-`thinking` / `output_config` request overrides.
-Notes:
-- Do not pass `--out` for normal runs. Let `ask.py` auto-name files from the
-  question set and canonical model; use the printed output path in follow-up
-  commands.
-- If capacity errors are high, reduce `--workers` and retry.
-- Errors are recorded in the output JSONL and can be inspected for diagnostics.
-- Use `--force-subprovider` only when a particular subprovider is problematic
-  (or if you observe one subprovider causing most errors).
-2) Sanity check the output:
-   - `ask.py` prints `SUMMARY total=... apparent_errors=...` and the output path.
-     Copy that exact path (auto-named) for retries and judging.
-   - Optional exact count:
-```bash
-uv run python - <<'PY'
-from pathlib import Path
-from compliance.data import JSONLHandler, ModelResponse
-path = Path("responses/<file>.jsonl")
-rows = JSONLHandler.load_jsonl(path, ModelResponse)
-errors = sum(r.is_permanent_error() for r in rows)
-print(f"rows={len(rows)} errors={errors}")
-PY
-```
-3) Retry errors until near-zero (or until the count stabilizes):
-```bash
-uv run python ask.py --detect responses/<file>.jsonl --workers 30 --frpe
-```
-If the error count keeps decreasing across retries, keep going until it reaches
-a stable point. After that, any remaining errors are likely moderation-layer
-failures and can be accepted. Note: moderation layers can be racy (some models
-start answering while moderation is still processing), so it is normal for a
-few to slip through even when the only failures are moderation-related.
-- Useful interpretation hints for stable residuals:
-  - Moderation-layer failures can be either explicit or implicit.
-  - Explicit cases may show up as clear moderation/provider block payloads or
-    other obvious policy-enforcement errors.
-  - Implicit cases have to be inferred from the response shape.
-  - If residual rows cluster on sensitive prompts and the payload shows
-    `message.content` missing/empty with `finish_reason: "stop"` and no
-    explicit provider error, treat that as likely moderation-layer suppression.
-  - If residual rows remain as top-level API errors, `choices[0].error`, or
-    obvious 429/5xx-style upstream failures on non-sensitive prompts, treat
-    that as provider instability rather than hidden moderation.
+- Environments are expected to expose `load_environment(...) -> vf.Environment` and be installable with `prime env install <env-name>`. (See `docs/overview.md` and `docs/environments.md`.)
+- Validate environment behavior with `prime eval run <env-name> ...` before sharing/publishing changes. Treat `prime eval run` as the canonical eval path: it saves results automatically, and agents should not add opt-out flags such as `--skip-upload` unless the user explicitly requests that deviation so runs stay visible in the private Evaluations tab and in `prime eval tui`. (See `docs/overview.md` and `docs/development.md`.)
+- Use `ToolEnv`/`MCPEnv` for stateless tools and `StatefulToolEnv` when per-rollout state must persist (sandbox/session/db handles). (See `docs/environments.md`.)
+- If external API keys are required, validate them in `load_environment()` with `vf.ensure_keys(...)` so failures are explicit and early. (See `docs/environments.md`.)
 
-## Judge compliance
-1) Run the judge:
-```bash
-uv run python judge_compliance.py --workers 30 responses/<file>.jsonl
-```
-Note: judge capacity errors are rare since we use a large commercial model.
-2) Check in with the user after judging:
-   - Summarize compliance counts and error rate.
-   - Confirm results look plausible before proceeding to reports or publishing.
-3) Check error counts in the analysis file:
-```bash
-uv run python - <<'PY'
-from pathlib import Path
-from collections import Counter
-from compliance.data import JSONLHandler, ComplianceAnalysis
-path = Path("analysis/compliance_<file_stem>.jsonl")
-rows = JSONLHandler.load_jsonl(path, ComplianceAnalysis)
-counts = Counter(r.compliance for r in rows)
-print(counts)
-PY
-```
-4) If errors remain:
-   - Re-run the same command; the judge updates error rows automatically.
-   - If the run aborts early, increase `--max-errors`.
-   - If the file is corrupted or badly skewed, re-run with `--force-restart`.
-   - If the error count keeps decreasing, keep retrying until it stabilizes.
-   - After a few attempts at a stable point, accept any residual
-     moderation-style errors.
+## End-User Lab Workspace Notes
 
-## Commit in llm-compliance
-- Stage only the relevant files: `responses/`, `analysis/`, and
-  `model_catalog.jsonl` (if it changed).
-- Never commit a run with a very large error count. If errors are still high,
-  treat the run as failed and non-informative, then continue retries (`--frpe`
-  and/or judge retries) until errors are near-zero or clearly stabilized at a
-  small residual level.
-- Check file sizes before pushing:
-```bash
-find responses analysis -type f -size +50M
-```
-- Commit and push with a concise message (user-specified if provided).
+Use this guidance in projects created via `prime lab setup`.
 
-## Update Speechmap website
-1) In `../speechmap`, update `model_metadata.json`:
-   - `creator`, `model_name`, `model_family`, `release_date` (YYYY-MM-DD),
-     `reasoning_model` (true/false), `notes`.
-   - Confirm `reasoning_model` by checking a response line for reasoning traces.
-2) Regenerate site:
-```bash
-uv run python preprocess.py
-```
-3) Optional preview:
-```bash
-python3 -m http.server 8001
-```
-4) Follow `../speechmap/AGENTS.md` for staging/commit rules
-   (summarize changes and get approval before `git add`/`git commit`).
-   Do not commit `.cache/` or `.venv/`.
-5) Commit and `git push` to deploy.
+- Treat `.prime/skills/` as the canonical skill entrypoint in Lab workspaces. Use the bundled skills first for create/browse/review/eval/GEPA/train/brainstorm workflows before ad hoc approaches.
+- Keep endpoint aliases in `./configs/endpoints.toml` and use `endpoint_id`/model shortcuts in commands and configs.
+- NEVER initialize environment source code manually; ALWAYS create new environments with `prime env init`.
+- Use the Prime CLI for all environment lifecycle operations (`prime env init` → `prime env install` → `prime eval run` → `prime env push`) rather than ad-hoc scripts.
+- Treat `prime eval run` as the default eval path. It already saves results automatically; do not add `--skip-upload` or other opt-out deviations unless the user explicitly requests them, so logs and results stay available in the private Evaluations tab and via `prime eval tui`.
+- NEVER begin environment development before `prime lab setup` has been run; if work starts outside that structure, recommend adjusting course into a proper lab workspace before continuing.
+- Keep each environment self-contained under `environments/<env_name>/` with `pyproject.toml`, implementation, and README so each abstraction has a dedicated home and the workspace stays maintainable.
+- Follow environment best practices strictly (for example `load_environment(...)`, `vf.ensure_keys(...)`, and the documented environment class patterns) to avoid brittle or messy implementations.
+- Use `prime env push --path ./environments/<env_name>` only after local eval behavior is verified.
+- Treat the `prime lab setup` structure as the idiomatic workspace for complex environment workflows: agents can mediate most platform complexity while users learn patterns progressively as needed.
+- When users request an approach that would deviate from these guidelines, explain the relevant Prime/Verifiers concepts and recommend the compliant path.
+
+## LLM Compliance Evaluation Notes
+
+Use these project-specific rules when working with `ask.py`, `judge_compliance.py`, `$SPEECHMAP_DATA_ROOT/analysis/*.jsonl`, and SpeechMap-facing compliance outputs. The data root defaults to the sibling `../speechmap-data` checkout. Before using the explicit shell paths below, export `SPEECHMAP_DATA_ROOT="${SPEECHMAP_DATA_ROOT:-../speechmap-data}"`.
+
+- Treat moderation/classifier stops as terminal system behavior, not transient noise to race. Original-model moderation/classifier stops should be represented as `ERROR_ORIGINAL_MODERATION`; judge-model content-filter stops should be represented as `ERROR_JUDGE_CONTENT_FILTER`; output-limit stops should be represented as `ERROR_ORIGINAL_TRUNCATION`.
+- Do not rerun judging just to try to get past a moderation/content-filter row. Do not use `--force-restart` for that purpose. Preserve existing `ERROR_JUDGE_CONTENT_FILTER` rows on resume.
+- `ask.py --frpe` is still appropriate for retrying original-model failures that are not identified as moderation, such as opaque provider failures, network/provider transients, quota/overload rows, or other non-moderation permanent response errors.
+- Judge quota errors such as `429 RESOURCE_EXHAUSTED`, network failures, overloads, and other transport/provider failures are retryable, but retries must be rate-limited. Do not retry them in an unthrottled burst.
+- The default hosted judge is Grok 4.1 Fast non-reasoning via `google_agent_platform` (`xai/grok-4.1-fast-non-reasoning`). Do not run it with high workers and no throttle.
+- Use the calibrated Grok 4.1 Fast judge setting by default:
+  `PYTHONPATH=. uv run python judge_compliance.py "$SPEECHMAP_DATA_ROOT/responses/us_hard_MODEL.jsonl" --workers 64 --request-min-interval 0.8 --request-max-per-period 45 --request-period 60 --judge-max-retries 2 --quota-cooldown 20 --max-errors 20`
+- `ask.py` takes an exclusive advisory lock on the response file by default. If it cannot obtain that lock, treat that as another producer already writing and exit rather than racing the file. Use `--skip-lock` only for manual recovery when concurrent writing has been ruled out.
+- To overlap generation and judging, prefer `judge_compliance.py "$SPEECHMAP_DATA_ROOT/responses/us_hard_MODEL.jsonl" --follow --follow-poll-interval 30` with the same calibrated judge quota flags. Follow mode polls the whole response file while the producer lock is held, then runs a final pass and enforces prompt/analysis completeness after the lock is released.
+- Do not use the old one-worker/two-second setting as a normal run mode; it underuses the observed quota.
+- For batch judging, use `tools/judge_compliance_queue.py` with `--jobs 1` and the same per-child rate settings, unless a new live quota probe shows a safer higher rate.
+- Quarantine sidecar files such as `$SPEECHMAP_DATA_ROOT/responses/*.jsonl.unknown_metadata.jsonl` and `$SPEECHMAP_DATA_ROOT/responses/*.jsonl.metadata_error.jsonl` are temporary cleanup artifacts. Never check them in. Their unresolved existence blocks eval commits until the row is classified and migrated into the main response file, or a special exception is approved.
+- Every prompt in the question set must have a response row before committing an eval, even when that row is an error. Missing response rows, extra response rows, missing analysis rows, and extra analysis rows block commits unless a special exception is approved.
+- Before committing a model eval, audit every retained non-success row type and share aggregate error statistics for user sign-off. Include counts by `response_status`, compliance error label, finish/native finish reason, provider error code/message family, and model/provider where relevant. Use `PYTHONPATH=. uv run python tools/eval_error_report.py "$SPEECHMAP_DATA_ROOT/responses/us_hard_MODEL.jsonl"` as the starting point. Do not commit eval results until the retained errors are characterized and accepted.

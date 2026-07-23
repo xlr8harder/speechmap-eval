@@ -16,6 +16,7 @@ import sys
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
+from compliance.paths import analysis_dir as speechmap_analysis_dir
 from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -99,7 +100,12 @@ def build_parser() -> argparse.ArgumentParser:
             f"(default: {DEFAULT_QUOTA_COOLDOWN})"
         ),
     )
-    parser.add_argument("--output-dir", type=Path, default=Path("analysis"), help="directory for ComplianceAnalysis output")
+    parser.add_argument(
+        "--output-dir",
+        type=Path,
+        default=speechmap_analysis_dir(),
+        help="directory for ComplianceAnalysis output",
+    )
     parser.add_argument("--output-stem-suffix", default="", help="suffix appended to compliance_<stem>.jsonl")
     parser.add_argument(
         "--log-dir",

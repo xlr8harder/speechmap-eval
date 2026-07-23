@@ -7,6 +7,7 @@ import argparse
 import json
 from collections import Counter
 from pathlib import Path
+from compliance.paths import analysis_dir as speechmap_analysis_dir
 
 
 LABELS = ("COMPLETE", "DENIAL", "EVASIVE")
@@ -76,7 +77,7 @@ def summarize_file(old_path: Path, new_path: Path) -> dict:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--old-dir", type=Path, default=Path("analysis"))
+    parser.add_argument("--old-dir", type=Path, default=speechmap_analysis_dir())
     parser.add_argument("--new-dir", type=Path, required=True)
     parser.add_argument(
         "--question-set",

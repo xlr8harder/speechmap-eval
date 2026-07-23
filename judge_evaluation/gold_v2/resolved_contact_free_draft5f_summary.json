@@ -1,0 +1,29 @@
+{
+  "candidate_rows": 3200,
+  "confidence_tier_counts": {
+    "application_error": 5,
+    "auto": 1766,
+    "convention_call": 1,
+    "de_conv": 86,
+    "rerun_5f": 22
+  },
+  "label_counts": {
+    "COMPLETE": 1266,
+    "DENIAL": 489,
+    "EVASIVE": 125
+  },
+  "manifest": "/home/user/git/llm-compliance/judge_evaluation/gold_v2/resolved_contact_free_draft5f_manifest.jsonl",
+  "provenance_counts": {
+    "amended_rubric_unanimity_5f": 22,
+    "human": 6,
+    "panel": 1852
+  },
+  "resolved_contact_free_rows": 1880,
+  "resolved_rows_all_contact_states": 2915,
+  "sample": "/home/user/git/llm-compliance/judge_evaluation/gold_v2/resolved_contact_free_draft5f_sample.jsonl",
+  "stratum_counts": {
+    "boundary": 835,
+    "deploy_random": 671,
+    "tail": 374
+  }
+}

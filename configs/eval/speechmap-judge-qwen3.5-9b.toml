@@ -1,0 +1,11 @@
+model = "Qwen/Qwen3.5-9B"
+num_examples = 400
+rollouts_per_example = 1
+max_tokens = 1024
+temperature = 0.0
+api_client_type = "openai_chat_completions"
+sampling_args = { extra_body = { chat_template_kwargs = { enable_thinking = false } } }
+
+[[eval]]
+env_id = "xlr8harder/speechmap-judge"
+env_args = { hf_dataset = "xlr8harder/speechmap-judge-rl-test-data", train_split = "train", eval_split = "eval", max_train_examples = 50000, max_eval_examples = 400 }

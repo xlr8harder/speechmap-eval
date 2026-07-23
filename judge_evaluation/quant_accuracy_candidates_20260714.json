@@ -1,0 +1,164 @@
+{
+  "as_of_utc": "2026-07-14T07:30:00Z",
+  "selection_contract": {
+    "base_models_must_be_unmodified": true,
+    "excluded_name_markers": [
+      "abliterated",
+      "uncensored",
+      "heretic",
+      "thinkingcap"
+    ],
+    "primary_accuracy_rows": 1880,
+    "banked_prediction_rows": 3200,
+    "prompt_sha256": "79dd1212444e3ded83f3b3f9c96946ded5eb4957f7e09018b919a40debd6d170",
+    "temperature": 0,
+    "top_p": 1,
+    "gemma_initial_mode": "no_thinking",
+    "thinking_followup": "best quant per architecture"
+  },
+  "existing_anchors": [
+    {
+      "model_id": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+      "runtime": "vllm",
+      "precision": "modelopt_nvfp4",
+      "status": "complete_remote_baseline"
+    },
+    {
+      "model_id": "google/gemma-4-31B-it",
+      "runtime": "vllm",
+      "precision": "bf16_and_runtime_fp8",
+      "status": "complete_remote_baseline"
+    },
+    {
+      "model_id": "nvidia/Gemma-4-31B-IT-NVFP4",
+      "runtime": "vllm",
+      "precision": "partial_modelopt_nvfp4",
+      "status": "complete_remote_baseline"
+    }
+  ],
+  "candidates": [
+    {
+      "key": "gemma31_redhat_nvfp4",
+      "group": "gemma31_dense",
+      "model_id": "RedHatAI/gemma-4-31B-it-NVFP4",
+      "revision": "c35c90c690bcad6b723441405c0183c8e7f186b7",
+      "runtime": "vllm",
+      "quantization": "compressed-tensors",
+      "checkpoint_gib": 21.67,
+      "downloads_at_inventory": 1189647
+    },
+    {
+      "key": "gemma31_google_qat_w4a16",
+      "group": "gemma31_dense",
+      "model_id": "google/gemma-4-31B-it-qat-w4a16-ct",
+      "revision": "e3dacad5f03b852209f5ce18e44094fc80120037",
+      "runtime": "vllm",
+      "quantization": "compressed-tensors",
+      "checkpoint_gib": 21.67,
+      "downloads_at_inventory": 1413425
+    },
+    {
+      "key": "gemma31_cyankiwi_awq",
+      "group": "gemma31_dense",
+      "model_id": "cyankiwi/gemma-4-31B-it-AWQ-4bit",
+      "revision": "325eddd152dd506a9e2353ef55383142e999e28b",
+      "runtime": "vllm",
+      "quantization": "compressed-tensors",
+      "checkpoint_gib": 19.47,
+      "downloads_at_inventory": 1095371
+    },
+    {
+      "key": "gemma31_unsloth_bnb4",
+      "group": "gemma31_dense",
+      "model_id": "unsloth/gemma-4-31B-it-unsloth-bnb-4bit",
+      "revision": "a1bcd8d57897fd91faad7409cc1c5511e0da722d",
+      "runtime": "vllm",
+      "quantization": "bitsandbytes",
+      "checkpoint_gib": 17.77,
+      "downloads_at_inventory": 554137
+    },
+    {
+      "key": "gemma31_unsloth_base_q4km",
+      "group": "gemma31_dense",
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "revision": "12e99a2f1ca91c69897aba2472bc16db674b3cb1",
+      "runtime": "llama.cpp",
+      "filename": "gemma-4-31B-it-Q4_K_M.gguf",
+      "quantization": "Q4_K_M",
+      "checkpoint_gib": 17.07,
+      "downloads_at_inventory": 512928
+    },
+    {
+      "key": "gemma31_unsloth_qat_q4kxl",
+      "group": "gemma31_dense",
+      "model_id": "unsloth/gemma-4-31B-it-qat-GGUF",
+      "revision": "1f1e54258d4a2cf7522856a5789045d9f2ea6d16",
+      "runtime": "llama.cpp",
+      "filename": "gemma-4-31B-it-qat-UD-Q4_K_XL.gguf",
+      "quantization": "UD-Q4_K_XL",
+      "checkpoint_gib": 16.10,
+      "downloads_at_inventory": 304102
+    },
+    {
+      "key": "gemma26a4b_redhat_nvfp4",
+      "group": "gemma26a4b_moe",
+      "model_id": "RedHatAI/gemma-4-26B-A4B-it-NVFP4",
+      "revision": "3fe5216769bc9b1a5bec11af53b47c9d8cb81e7d",
+      "runtime": "vllm",
+      "quantization": "compressed-tensors",
+      "checkpoint_gib": 15.30,
+      "downloads_at_inventory": 1146786
+    },
+    {
+      "key": "gemma26a4b_cyankiwi_awq",
+      "group": "gemma26a4b_moe",
+      "model_id": "cyankiwi/gemma-4-26B-A4B-it-AWQ-4bit",
+      "revision": "3a7dcb639a4e7b230a0491ab4fa6fac081284d37",
+      "runtime": "vllm",
+      "quantization": "compressed-tensors",
+      "checkpoint_gib": 16.01,
+      "downloads_at_inventory": 5574476
+    },
+    {
+      "key": "gemma26a4b_unsloth_qat_q4kxl",
+      "group": "gemma26a4b_moe",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-qat-GGUF",
+      "revision": "c1f25db7cf31985b52caa1db777eb72d17ca1c7c",
+      "runtime": "llama.cpp",
+      "filename": "gemma-4-26B-A4B-it-qat-UD-Q4_K_XL.gguf",
+      "quantization": "UD-Q4_K_XL",
+      "checkpoint_gib": 13.27,
+      "downloads_at_inventory": 726251
+    },
+    {
+      "key": "gemma12_google_qat_w4a16",
+      "group": "smaller_gemma",
+      "model_id": "google/gemma-4-12B-it-qat-w4a16-ct",
+      "revision": "52641b13d6feff3ceab59d6e4f7dabb02a9a5912",
+      "runtime": "vllm",
+      "quantization": "compressed-tensors",
+      "checkpoint_gib": 9.56,
+      "downloads_at_inventory": 1913656
+    },
+    {
+      "key": "gemma_e4b_google_qat_w4a16",
+      "group": "smaller_gemma",
+      "model_id": "google/gemma-4-E4B-it-qat-w4a16-ct",
+      "revision": "88d62ea05d2138e2f06f4e1f345fbaba2273d681",
+      "runtime": "vllm",
+      "quantization": "compressed-tensors",
+      "checkpoint_gib": 10.72,
+      "downloads_at_inventory": 362564
+    },
+    {
+      "key": "qwen36_27b_nvidia_nvfp4",
+      "group": "smaller_qwen",
+      "model_id": "nvidia/Qwen3.6-27B-NVFP4",
+      "revision": "0893e1606ff3d5f97a441f405d5fc541a6bdf404",
+      "runtime": "vllm",
+      "quantization": "modelopt",
+      "checkpoint_gib": 20.42,
+      "downloads_at_inventory": 1018548
+    }
+  ]
+}

@@ -1,0 +1,260 @@
+{
+  "schema_version": 1,
+  "workload": {
+    "id": "qwen36_27b_fp8_thinking_mtp3_v2_draft5f",
+    "model_id": "Qwen/Qwen3.6-27B-FP8",
+    "model_revision": "e89b16ebf1988b3d6befa7de50abc2d76f26eb09",
+    "vllm_image": "vllm/vllm-openai@sha256:f0b9a0dc75a9fca3b6811e3279367b2d6a448055a000bfd13859587d74cef268",
+    "vllm_version": "0.25.1",
+    "thinking": true,
+    "mtp_depth": 3,
+    "temperature": 0,
+    "top_p": 1,
+    "max_output_tokens": 8192,
+    "rubric": "gold_v2 draft5f"
+  },
+  "profiles": [
+    {
+      "profile_id": "h200_141gb_sxm5_qwen36_fp8_mtp3_20260717",
+      "gpu_type_regex": "^H200 141GB$",
+      "minimum_gpu_memory_gb": 141,
+      "socket": "SXM5",
+      "source_provider": "datacrunch",
+      "rows_per_second": 1.7521115834,
+      "measured_rows": 3200,
+      "measured_inference_seconds": 1826.3677,
+      "startup_seconds": {
+        "cold": 790,
+        "warm": 105,
+        "none": 0
+      },
+      "provider_startup_seconds": {
+        "datacrunch": {
+          "cold": 790,
+          "warm": 105,
+          "none": 0
+        }
+      },
+      "accuracy": {
+        "resolved_exact_correct": 1827,
+        "resolved_binary_correct": 1864,
+        "resolved_rows": 1880,
+        "parseable_rows": 3200,
+        "total_rows": 3200
+      },
+      "engine": {
+        "max_model_len": 32768,
+        "max_num_seqs": 256,
+        "request_concurrency": 256,
+        "max_num_batched_tokens": 32768,
+        "quant_kernel": "FlashInferFp8DeepGEMMDynamicBlockScaledKernel"
+      },
+      "confidence": "measured",
+      "measured_at": "2026-07-17",
+      "source_artifact": "judge_evaluation/results/qwen27_unsloth_mtp_bench_20260716/h200_datacrunch_official_bf16_fp8_fullmatrix_resume3_20260716/variants/qwen36_27b_fp8_mtp3/eval/full3200"
+    },
+    {
+      "profile_id": "h100_80gb_sxm5_qwen36_fp8_mtp3_20260717",
+      "gpu_type_regex": "^H100 80GB$",
+      "minimum_gpu_memory_gb": 80,
+      "socket": "SXM5",
+      "source_provider": "datacrunch",
+      "rows_per_second": 1.3126629474,
+      "measured_rows": 3200,
+      "measured_inference_seconds": 2437.792585,
+      "startup_seconds": {
+        "cold": 709.075852,
+        "warm": 262,
+        "none": 0
+      },
+      "provider_startup_seconds": {
+        "datacrunch": {
+          "cold": 709.075852,
+          "warm": 262,
+          "none": 0
+        }
+      },
+      "accuracy": {
+        "resolved_exact_correct": 1821,
+        "resolved_binary_correct": 1863,
+        "resolved_rows": 1880,
+        "parseable_rows": 3200,
+        "total_rows": 3200
+      },
+      "engine": {
+        "max_model_len": 32768,
+        "max_num_seqs": 128,
+        "request_concurrency": 256,
+        "max_num_batched_tokens": 32768,
+        "quant_kernel": "FlashInferFp8DeepGEMMDynamicBlockScaledKernel",
+        "mtp_token_acceptance": 0.766499,
+        "preemptions": 344
+      },
+      "source_pricing": {
+        "advertised_usd_per_hour": 3.25,
+        "billed_usd_per_hour": 3.387,
+        "billed_lifecycle_usd": 2.8995
+      },
+      "confidence": "measured",
+      "measured_at": "2026-07-17",
+      "source_artifact": "judge_evaluation/results/qwen36_fp8_mtp3_backend_bench_20260717/h100_datacrunch_nonspot_fp8_mtp3_full3200_20260717/variants/qwen36_27b_fp8_mtp3/eval/full3200"
+    },
+    {
+      "profile_id": "l40s_48gb_pcie_qwen36_fp8_mtp3_20260717",
+      "gpu_type_regex": "^L40S 48GB$",
+      "minimum_gpu_memory_gb": 48,
+      "socket": "PCIe",
+      "source_provider": "crusoecloud",
+      "rows_per_second": 0.1845,
+      "measured_rows": 100,
+      "measurement_kind": "saturated_partial",
+      "startup_seconds": {
+        "cold": 541.123816,
+        "warm": 170.735799,
+        "none": 0
+      },
+      "provider_startup_seconds": {
+        "crusoecloud": {
+          "cold": 541.123816,
+          "warm": 170.735799,
+          "none": 0
+        }
+      },
+      "accuracy": {
+        "resolved_exact_correct": 74,
+        "resolved_binary_correct": 74,
+        "resolved_rows": 74,
+        "parseable_rows": 109,
+        "sampled_rows": 109,
+        "full_bank_completed": false
+      },
+      "engine": {
+        "max_model_len": 16384,
+        "max_num_seqs": 64,
+        "request_concurrency": 128,
+        "max_num_batched_tokens": 16384,
+        "compilation_config": {
+          "cudagraph_capture_sizes": [1, 2, 4, 8, 16, 24, 32, 40, 48, 56, 64],
+          "max_cudagraph_capture_size": 64
+        },
+        "quant_kernel": "TritonFp8BlockScaledMMKernel",
+        "mtp_token_acceptance": 0.763132,
+        "preemptions_after_109_rows": 23
+      },
+      "vllm_image": "vllm/vllm-openai@sha256:483a446d6b06a3757e4c7f5ca707e32443f49202bd382380dd969f90792e6a8d",
+      "vllm_cuda_build": "12.9",
+      "source_driver": "565.57.01",
+      "source_pricing": {
+        "advertised_usd_per_hour": 1.0,
+        "billed_usd_per_hour": 1.0,
+        "billed_lifecycle_usd": 0.3217
+      },
+      "confidence": "measured",
+      "measured_at": "2026-07-17",
+      "source_artifact": "judge_evaluation/results/qwen36_fp8_mtp3_backend_bench_20260717/l40s_crusoe_nonspot_fp8_mtp3_full3200_cu129_cg64_b64_20260717/variants/qwen36_27b_fp8_mtp3/eval/full3200"
+    },
+    {
+      "profile_id": "a100_80gb_pcie_qwen36_fp8_mtp3_20260717",
+      "gpu_type_regex": "^A100 80GB$",
+      "minimum_gpu_memory_gb": 80,
+      "socket": "PCIe",
+      "source_provider": "crusoecloud",
+      "rows_per_second": 0.2931,
+      "measured_rows": 200,
+      "measurement_kind": "saturated_partial",
+      "startup_seconds": {
+        "cold": 633.076589,
+        "warm": 220.979176,
+        "none": 0
+      },
+      "provider_startup_seconds": {
+        "crusoecloud": {
+          "cold": 633.076589,
+          "warm": 220.979176,
+          "none": 0
+        }
+      },
+      "accuracy": {
+        "resolved_exact_correct": 145,
+        "resolved_binary_correct": 146,
+        "resolved_rows": 147,
+        "parseable_rows": 215,
+        "sampled_rows": 215,
+        "full_bank_completed": false
+      },
+      "engine": {
+        "max_model_len": 32768,
+        "max_num_seqs": 128,
+        "request_concurrency": 256,
+        "max_num_batched_tokens": 32768,
+        "compilation_config": {
+          "cudagraph_capture_sizes": [1, 2, 4, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128],
+          "max_cudagraph_capture_size": 128
+        },
+        "quant_kernel": "MarlinFP8ScaledMMLinearKernel",
+        "mtp_token_acceptance": 0.761256,
+        "preemptions_after_215_rows": 24
+      },
+      "vllm_image": "vllm/vllm-openai@sha256:483a446d6b06a3757e4c7f5ca707e32443f49202bd382380dd969f90792e6a8d",
+      "vllm_cuda_build": "12.9",
+      "source_pricing": {
+        "advertised_usd_per_hour": 1.65,
+        "billed_usd_per_hour": 1.65,
+        "billed_lifecycle_usd": 0.5816
+      },
+      "confidence": "measured",
+      "measured_at": "2026-07-17",
+      "source_artifact": "judge_evaluation/results/qwen36_fp8_mtp3_backend_bench_20260717/a10080_pcie_crusoe_nonspot_fp8_mtp3_full3200_cu129_cg128_b_20260717/variants/qwen36_27b_fp8_mtp3/eval/full3200"
+    },
+    {
+      "profile_id": "rtx_pro_6000b_96gb_pcie_qwen36_fp8_mtp3_20260717",
+      "gpu_type_regex": "^RTX PRO 6000B 96GB$",
+      "minimum_gpu_memory_gb": 96,
+      "socket": "PCIe",
+      "source_provider": "datacrunch",
+      "rows_per_second": 0.7772299181,
+      "measured_rows": 3200,
+      "measured_inference_seconds": 4117.185823,
+      "startup_seconds": {
+        "cold": 547.211767,
+        "warm": 160.441857,
+        "none": 0
+      },
+      "provider_startup_seconds": {
+        "datacrunch": {
+          "cold": 547.211767,
+          "warm": 160.441857,
+          "none": 0
+        }
+      },
+      "accuracy": {
+        "resolved_exact_correct": 1823,
+        "resolved_binary_correct": 1863,
+        "resolved_rows": 1880,
+        "parseable_rows": 3200,
+        "total_rows": 3200
+      },
+      "engine": {
+        "max_model_len": 32768,
+        "max_num_seqs": 128,
+        "request_concurrency": 256,
+        "max_num_batched_tokens": 32768,
+        "compilation_config": {
+          "cudagraph_capture_sizes": [1, 2, 4, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128],
+          "max_cudagraph_capture_size": 128
+        },
+        "quant_kernel": "CutlassFp8BlockScaledMMKernel",
+        "mtp_token_acceptance": 0.765493,
+        "preemptions": 339
+      },
+      "source_pricing": {
+        "advertised_usd_per_hour": 1.89,
+        "billed_usd_per_hour": 1.9448,
+        "billed_lifecycle_usd": 2.5274
+      },
+      "confidence": "measured",
+      "measured_at": "2026-07-17",
+      "source_artifact": "judge_evaluation/results/qwen36_fp8_mtp3_backend_bench_20260717/rtxpro6000b_datacrunch_nonspot_fp8_mtp3_full3200_cg128_20260717/variants/qwen36_27b_fp8_mtp3/eval/full3200"
+    }
+  ]
+}

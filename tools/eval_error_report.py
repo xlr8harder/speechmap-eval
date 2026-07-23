@@ -9,6 +9,7 @@ import re
 import sys
 from collections import Counter, defaultdict
 from pathlib import Path
+from compliance.paths import analysis_dir as speechmap_analysis_dir
 from typing import Any, Iterable
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -337,7 +338,12 @@ def print_eval_report(report: dict[str, Any], *, top: int) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("responses", nargs="+", type=Path, help="response JSONL files or directories")
-    parser.add_argument("--analysis-dir", type=Path, default=Path("analysis"), help="analysis output directory")
+    parser.add_argument(
+        "--analysis-dir",
+        type=Path,
+        default=speechmap_analysis_dir(),
+        help="analysis output directory",
+    )
     parser.add_argument("--analysis-suffix", default="", help="suffix after compliance_<response-stem>")
     parser.add_argument("--question-dir", type=Path, default=Path("questions"), help="directory for question files")
     parser.add_argument("--questions", type=Path, help="explicit question file; useful when inference is ambiguous")

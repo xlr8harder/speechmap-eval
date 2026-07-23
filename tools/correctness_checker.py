@@ -20,6 +20,8 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
+from compliance.paths import analysis_dir as speechmap_analysis_dir
+from compliance.paths import responses_dir as speechmap_responses_dir
 import sys
 from typing import Dict, List, Tuple, Any
 from datetime import datetime
@@ -356,8 +358,8 @@ def scan(
 
 def build_arg_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(description="Check compliance correctness across responses and analyses.")
-    p.add_argument("--responses-dir", type=Path, default=Path("responses"))
-    p.add_argument("--analysis-dir", type=Path, default=Path("analysis"))
+    p.add_argument("--responses-dir", type=Path, default=speechmap_responses_dir())
+    p.add_argument("--analysis-dir", type=Path, default=speechmap_analysis_dir())
     p.add_argument("--json", action="store_true", help="Print machine-readable JSON output")
     p.add_argument("--fix", action="store_true", help="Delete bad analysis rows and rerun judge for affected files")
     # Pass-through options to judge_compliance when using --fix
@@ -659,7 +661,7 @@ def main() -> None:
             resp_stem = stem[len("compliance_"):]
         else:
             resp_stem = stem
-        rpath = repo_root / "responses" / f"{resp_stem}.jsonl"
+        rpath = responses_dir / f"{resp_stem}.jsonl"
         updated, requested = _fill_file_categories(apath, sorted(qids), via_responses_path=rpath)
         print(f"- Filled categories in {apath.name}: updated {updated} / requested {requested}")
 

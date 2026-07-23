@@ -1,0 +1,75 @@
+name = "speechmap-judge-qwen3.5-9b-grpo-shaped-evasive-fp-v1-b768-r16"
+model = "Qwen/Qwen3.5-9B"
+
+max_steps = 16
+batch_size = 768
+rollouts_per_example = 16
+learning_rate = 3e-5
+lora_alpha = 16
+oversampling_factor = 2.0
+
+[sampling]
+max_tokens = 512
+temperature = 0.7
+enable_thinking = false
+
+[[env]]
+id = "xlr8harder/speechmap-judge"
+name = "train_COMPLETE"
+version = "0.1.8"
+args = { hf_dataset = "xlr8harder/speechmap-judge-rl-test-data", train_split = "train", eval_split = "eval", include_labels = "COMPLETE", balance_train_question_type = true, max_train_examples = -1, max_eval_examples = -1, debug_reward_mode = "shaped_label", shaped_evasive_false_positive_reward = -1.0, shaped_unparseable_reward = -0.5 }
+
+[[env]]
+id = "xlr8harder/speechmap-judge"
+name = "train_DENIAL"
+version = "0.1.8"
+args = { hf_dataset = "xlr8harder/speechmap-judge-rl-test-data", train_split = "train", eval_split = "eval", include_labels = "DENIAL", balance_train_question_type = true, max_train_examples = -1, max_eval_examples = -1, debug_reward_mode = "shaped_label", shaped_evasive_false_positive_reward = -1.0, shaped_unparseable_reward = -0.5 }
+
+[[env]]
+id = "xlr8harder/speechmap-judge"
+name = "train_EVASIVE"
+version = "0.1.8"
+args = { hf_dataset = "xlr8harder/speechmap-judge-rl-test-data", train_split = "train", eval_split = "eval", include_labels = "EVASIVE", balance_train_question_type = true, max_train_examples = -1, max_eval_examples = -1, debug_reward_mode = "shaped_label", shaped_evasive_false_positive_reward = -1.0, shaped_unparseable_reward = -0.5 }
+
+[eval]
+interval = 1
+num_examples = 96
+rollouts_per_example = 1
+eval_base_model = false
+
+[[eval.env]]
+id = "xlr8harder/speechmap-judge"
+name = "eval_COMPLETE"
+version = "0.1.8"
+args = { hf_dataset = "xlr8harder/speechmap-judge-rl-test-data", train_split = "train", eval_split = "eval", include_labels = "COMPLETE", max_train_examples = -1, max_eval_examples = -1, debug_reward_mode = "label" }
+num_examples = 32
+rollouts_per_example = 1
+
+[[eval.env]]
+id = "xlr8harder/speechmap-judge"
+name = "eval_DENIAL"
+version = "0.1.8"
+args = { hf_dataset = "xlr8harder/speechmap-judge-rl-test-data", train_split = "train", eval_split = "eval", include_labels = "DENIAL", max_train_examples = -1, max_eval_examples = -1, debug_reward_mode = "label" }
+num_examples = 32
+rollouts_per_example = 1
+
+[[eval.env]]
+id = "xlr8harder/speechmap-judge"
+name = "eval_EVASIVE"
+version = "0.1.8"
+args = { hf_dataset = "xlr8harder/speechmap-judge-rl-test-data", train_split = "train", eval_split = "eval", include_labels = "EVASIVE", max_train_examples = -1, max_eval_examples = -1, debug_reward_mode = "label" }
+num_examples = 32
+rollouts_per_example = 1
+
+[buffer]
+online_difficulty_filtering = false
+env_ratios = [0.3333333333333333, 0.3333333333333333, 0.3333333333333333]
+seed = 42
+
+[checkpoints]
+interval = 2
+keep_cloud = 3
+
+[adapters]
+interval = 1
+keep_last = -1

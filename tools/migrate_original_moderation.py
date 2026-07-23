@@ -17,6 +17,7 @@ from collections import Counter
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
+from compliance.paths import analysis_dir as speechmap_analysis_dir
 from typing import Any, Iterable
 
 from compliance.data import ModelResponse
@@ -158,7 +159,7 @@ def main() -> None:
         "paths",
         nargs="*",
         type=Path,
-        default=[Path("analysis")],
+        default=[speechmap_analysis_dir()],
         help="Analysis JSONL files or directories containing compliance_*.jsonl files.",
     )
     parser.add_argument("--dry-run", action="store_true", help="Report changes without rewriting files.")

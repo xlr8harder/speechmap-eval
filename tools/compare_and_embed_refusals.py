@@ -27,6 +27,7 @@ import glob
 import math
 from collections import defaultdict
 from pathlib import Path
+from compliance.paths import analysis_dir as speechmap_analysis_dir
 from typing import Dict, List, Tuple, Iterable
 
 import numpy as np
@@ -369,7 +370,12 @@ def phase2_embed_analysis(
 def build_arg_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(description="Phase 1 then Phase 2 on top-N peers.")
     p.add_argument("target", type=Path, help="Target ComplianceAnalysis JSONL (single file).")
-    p.add_argument("--others-dir", type=Path, default=Path("analysis"), help="Dir with peer compliance_*.jsonl files.")
+    p.add_argument(
+        "--others-dir",
+        type=Path,
+        default=speechmap_analysis_dir(),
+        help="Dir with peer compliance_*.jsonl files.",
+    )
     p.add_argument("--others-glob", type=str, default="compliance_*.jsonl", help="Glob within --others-dir for peers.")
     p.add_argument("--others-files", type=Path, nargs="*", help="Explicit peer files (overrides dir/glob).")
     p.add_argument("--min-overlap", type=int, default=20, help="Minimum overlapping QIDs for Phase 1.")
@@ -422,4 +428,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

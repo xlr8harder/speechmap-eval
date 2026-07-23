@@ -1,0 +1,215 @@
+{
+  "version": 1,
+  "description": "SpeechMap compliance-judge gold v2 panel qualification candidates.",
+  "defaults": {
+    "api_provider": "openrouter",
+    "request_format": "chat_completions",
+    "max_tokens": 4096,
+    "temperature": 0,
+    "provider_routing": {
+      "allow_list": [],
+      "ignore_list": []
+    }
+  },
+  "candidates": [
+    {
+      "key": "z-ai_glm-5.2_reasoning_medium",
+      "openrouter_slug": "z-ai/glm-5.2",
+      "reasoning": {
+        "enabled": true,
+        "effort": "medium"
+      },
+      "provider_routing": {
+        "ignore_list": [
+          "Ambient",
+          "AtlasCloud",
+          "Decart",
+          "DeepInfra",
+          "DigitalOcean",
+          "GMICloud",
+          "Io Net",
+          "Morph",
+          "Novita",
+          "StreamLake",
+          "Together",
+          "Venice"
+        ]
+      }
+    },
+    {
+      "key": "moonshotai_kimi-k2.6_reasoning_medium",
+      "openrouter_slug": "moonshotai/kimi-k2.6",
+      "reasoning": {
+        "enabled": true,
+        "effort": "medium"
+      },
+      "provider_routing": {
+        "allow_list": [
+          "SiliconFlow",
+          "Fireworks",
+          "Cloudflare",
+          "BaseTen",
+          "Moonshot AI"
+        ]
+      }
+    },
+    {
+      "key": "minimax_minimax-m3_no_reasoning",
+      "openrouter_slug": "minimax/minimax-m3",
+      "reasoning": {
+        "enabled": false
+      },
+      "provider_routing": {}
+    },
+    {
+      "key": "deepseek_deepseek-v4-pro_reasoning_medium",
+      "openrouter_slug": "deepseek/deepseek-v4-pro",
+      "reasoning": {
+        "enabled": true,
+        "effort": "medium"
+      },
+      "provider_routing": {
+        "ignore_list": [
+          "GMICloud",
+          "StreamLake"
+        ]
+      }
+    },
+    {
+      "key": "deepseek_deepseek-v4-flash_reasoning_medium",
+      "openrouter_slug": "deepseek/deepseek-v4-flash",
+      "reasoning": {
+        "enabled": true,
+        "effort": "medium"
+      },
+      "provider_routing": {}
+    },
+    {
+      "key": "xiaomi_mimo-v2.5-pro_reasoning_medium",
+      "openrouter_slug": "xiaomi/mimo-v2.5-pro",
+      "reasoning": {
+        "enabled": true,
+        "effort": "medium"
+      },
+      "provider_routing": {
+        "ignore_list": [
+          "DeepInfra",
+          "DigitalOcean",
+          "Novita"
+        ]
+      }
+    },
+    {
+      "key": "nvidia_nemotron-3-ultra-550b-a55b_no_reasoning",
+      "openrouter_slug": "nvidia/nemotron-3-ultra-550b-a55b",
+      "reasoning": {
+        "enabled": false
+      },
+      "provider_routing": {
+        "ignore_list": [
+          "Together"
+        ]
+      }
+    },
+    {
+      "key": "qwen_qwen3.5-397b-a17b_reasoning_medium",
+      "openrouter_slug": "qwen/qwen3.5-397b-a17b",
+      "reasoning": {
+        "enabled": true,
+        "effort": "medium"
+      },
+      "provider_routing": {
+        "allow_list": [
+          "Novita",
+          "GMICloud",
+          "Alibaba"
+        ]
+      },
+      "max_tokens": 12288
+    },
+    {
+      "key": "openai_gpt-5.5_reasoning_medium",
+      "openrouter_slug": "openai/gpt-5.5",
+      "reasoning": {
+        "enabled": true,
+        "effort": "medium"
+      },
+      "provider_routing": {}
+    },
+    {
+      "key": "google_gemma-4-31b-it",
+      "openrouter_slug": "google/gemma-4-31b-it",
+      "reasoning": {
+        "enabled": false
+      },
+      "provider_routing": {
+        "ignore_list": [
+          "Novita",
+          "WandB"
+        ]
+      }
+    },
+    {
+      "key": "qwen_qwen3.6-27b_reasoning_medium",
+      "openrouter_slug": "qwen/qwen3.6-27b",
+      "reasoning": {
+        "enabled": true,
+        "effort": "medium"
+      },
+      "provider_routing": {
+        "ignore_list": [
+          "Chutes",
+          "DeepInfra",
+          "Io Net",
+          "Morph",
+          "Novita",
+          "Phala",
+          "SiliconFlow",
+          "Venice",
+          "WandB"
+        ]
+      }
+    },
+    {
+      "key": "qwen_qwen3.6-35b-a3b_reasoning_medium",
+      "openrouter_slug": "qwen/qwen3.6-35b-a3b",
+      "reasoning": {
+        "enabled": true,
+        "effort": "medium"
+      },
+      "provider_routing": {}
+    },
+    {
+      "key": "openai_gpt-oss-120b_reasoning_medium",
+      "openrouter_slug": "openai/gpt-oss-120b",
+      "reasoning": {
+        "enabled": true,
+        "effort": "medium"
+      },
+      "provider_routing": {
+        "ignore_list": [
+          "Novita"
+        ]
+      }
+    },
+    {
+      "key": "google_gemma-4-26b-a4b-it_reasoning_medium",
+      "openrouter_slug": "google/gemma-4-26b-a4b-it",
+      "reasoning": {
+        "enabled": true,
+        "effort": "medium"
+      },
+      "provider_routing": {
+        "ignore_list": [
+          "DeepInfra",
+          "DekaLLM",
+          "Google",
+          "NextBit",
+          "Novita",
+          "Parasail",
+          "SiliconFlow"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+name = "speechmap-judge-qwen3.5-9b-grpo-reasoning-evasive-only-r16-diagnostic"
+model = "Qwen/Qwen3.5-9B"
+
+max_steps = 1
+batch_size = 192
+rollouts_per_example = 16
+learning_rate = 3e-5
+lora_alpha = 16
+oversampling_factor = 1.0
+
+[sampling]
+max_tokens = 12288
+temperature = 1.0
+enable_thinking = true
+extra_body = { top_p = 0.95, top_k = 20, min_p = 0.0, presence_penalty = 1.5 }
+
+[[env]]
+id = "xlr8harder/speechmap-judge"
+name = "train_EVASIVE"
+version = "0.1.7"
+args = { hf_dataset = "xlr8harder/speechmap-judge-rl-test-data", train_split = "train", eval_split = "eval", include_labels = "EVASIVE", balance_train_question_type = true, max_train_examples = -1, max_eval_examples = -1 }
+
+[buffer]
+online_difficulty_filtering = false
+seed = 42
+
+[checkpoints]
+interval = 10
+keep_cloud = 0
+
+[adapters]
+interval = 1
+keep_last = 1

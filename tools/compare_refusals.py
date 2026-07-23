@@ -8,6 +8,7 @@ is formatted into neat columns for readability.
 from __future__ import annotations
 import argparse, glob, math
 from pathlib import Path
+from compliance.paths import analysis_dir as speechmap_analysis_dir
 from typing import Dict, List, Tuple
 from compliance.data import JSONLHandler, ComplianceAnalysis
 
@@ -84,7 +85,7 @@ def compare(base: Dict[str,str], other: Dict[str,str]) -> Dict[str,float|int]:
 def build_arg_parser():
     p = argparse.ArgumentParser()
     p.add_argument("target", type=Path)
-    p.add_argument("--others-dir", type=Path, default=Path("analysis"))
+    p.add_argument("--others-dir", type=Path, default=speechmap_analysis_dir())
     p.add_argument("--others-glob", type=str, default="compliance_*.jsonl")
     p.add_argument("--others-files", type=Path, nargs="*")
     p.add_argument("--min-overlap", type=int, default=20)
@@ -126,4 +127,3 @@ def main():
 
 if __name__=="__main__":
     main()
-

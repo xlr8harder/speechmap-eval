@@ -28,6 +28,7 @@ from bisect import bisect_left, bisect_right
 from collections import Counter, defaultdict
 from dataclasses import dataclass
 from pathlib import Path
+from compliance.paths import analysis_dir as speechmap_analysis_dir
 from typing import Dict, Iterable, List, Sequence
 
 
@@ -521,7 +522,7 @@ def materialize_selected_rows(
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--analysis-dir", type=Path, default=Path("analysis"))
+    parser.add_argument("--analysis-dir", type=Path, default=speechmap_analysis_dir())
     parser.add_argument("--analysis-files", nargs="*", type=Path, help="explicit analysis files to sample from")
     parser.add_argument(
         "--responses-out",

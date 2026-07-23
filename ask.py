@@ -28,6 +28,7 @@ import sys
 from concurrent.futures import FIRST_COMPLETED, ThreadPoolExecutor, wait
 from datetime import datetime, timezone
 from pathlib import Path
+from compliance.paths import responses_dir as speechmap_responses_dir
 from typing import List, Optional, Dict, Any, Iterator, Tuple
 import threading
 import time
@@ -911,7 +912,7 @@ def main(argv: Optional[List[str]] = None) -> None:  # noqa: D401
                 safe_model = anon_model_name
             else:
                 safe_model = (canonical_cli or api_model).replace("/", "_")
-            responses_path = Path("responses") / f"{stem}_{safe_model}.jsonl"
+            responses_path = speechmap_responses_dir() / f"{stem}_{safe_model}.jsonl"
 
     # Ensure output directory exists now that responses_path is finalized
     responses_path.parent.mkdir(parents=True, exist_ok=True)

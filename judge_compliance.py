@@ -33,6 +33,7 @@ from concurrent.futures import FIRST_COMPLETED, ThreadPoolExecutor, wait
 from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
+from compliance.paths import analysis_dir as speechmap_analysis_dir
 from threading import Lock
 from typing import Any, Dict, List, Optional
 
@@ -1105,7 +1106,12 @@ def build_arg_parser() -> argparse.ArgumentParser:
             f"(default: {DEFAULT_JUDGE_FALLBACK_MAX})"
         ),
     )
-    parser.add_argument("--output-dir", type=Path, default=Path("analysis"), help="directory for ComplianceAnalysis JSONL output")
+    parser.add_argument(
+        "--output-dir",
+        type=Path,
+        default=speechmap_analysis_dir(),
+        help="directory for ComplianceAnalysis JSONL output",
+    )
     parser.add_argument(
         "--output-stem-suffix",
         default="",

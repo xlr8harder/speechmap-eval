@@ -1,10 +1,35 @@
-# SpeechMap eval data
+# SpeechMap evaluation
 
-This repository contains the response data, judge outputs, and collection
-tooling behind SpeechMap.ai model compliance evaluations. The current primary
-dataset is the `us_hard` SpeechMap task: prompts that ask models to compose
-political speech, advocacy, or criticism involving governments, public policy,
-and related civic topics.
+This repository contains the collection, judging, judge-training, and
+evaluation tooling behind SpeechMap.ai. It also owns judge-development data:
+gold sets, adjudications, frozen judge evaluations, training datasets, and
+local experiment artifacts.
+
+The repository is being extracted from the historical `llm-compliance`
+code-and-data repository. Original model responses and production compliance
+analyses live in the separate `speechmap-data` repository.
+
+The default layout uses sibling checkouts:
+
+```bash
+git/
+├── speechmap-data/
+├── speechmap-eval/
+└── speechmap-site/
+```
+
+Set `SPEECHMAP_DATA_ROOT` when the data checkout lives elsewhere. Collection
+and judging defaults resolve `responses/` and `analysis/` beneath that root:
+
+```bash
+export SPEECHMAP_DATA_ROOT=/path/to/speechmap-data
+```
+
+The command examples below assume:
+
+```bash
+export SPEECHMAP_DATA_ROOT="${SPEECHMAP_DATA_ROOT:-../speechmap-data}"
+```
 
 Older multilingual China-criticism reports and reproduction commands are still
 in this repository, but they are no longer the main front page for the project.
@@ -14,10 +39,10 @@ The previous README has been preserved at [README.old.md](README.old.md).
 
 - `questions/`: prompt sets. `questions/us_hard.jsonl` is the main SpeechMap
   question set.
-- `responses/`: original model responses, one JSONL file per question set and
-  model.
-- `analysis/`: judge classifications for response files. These are the rows
-  consumed by SpeechMap after preprocessing.
+- `$SPEECHMAP_DATA_ROOT/responses/`: original model responses, one JSONL file
+  per question set and model.
+- `$SPEECHMAP_DATA_ROOT/analysis/`: production judge classifications consumed
+  by the SpeechMap site build.
 - `model_catalog.jsonl`: canonical model names, provider IDs, and request
   overrides used by `ask.py`.
 - `ask.py`: collects model responses and annotates response terminal status.
@@ -106,7 +131,7 @@ FRPE.
 
 ```bash
 PYTHONPATH=. uv run python ask.py \
-  --detect responses/us_hard_MODEL.jsonl \
+  --detect "$SPEECHMAP_DATA_ROOT/responses/us_hard_MODEL.jsonl" \
   --workers 30 \
   --frpe
 ```
@@ -123,7 +148,7 @@ rerun with the default blacklist still active:
 
 ```bash
 PYTHONPATH=. uv run python ask.py \
-  --detect responses/us_hard_MODEL.jsonl \
+  --detect "$SPEECHMAP_DATA_ROOT/responses/us_hard_MODEL.jsonl" \
   --workers 30 \
   --retry-moderation-subprovider Azure
 ```
@@ -138,7 +163,8 @@ The default hosted judge is Grok 4.1 Fast non-reasoning
 calibrated rolling quota settings:
 
 ```bash
-PYTHONPATH=. uv run python judge_compliance.py responses/us_hard_MODEL.jsonl \
+PYTHONPATH=. uv run python judge_compliance.py \
+  "$SPEECHMAP_DATA_ROOT/responses/us_hard_MODEL.jsonl" \
   --workers 64 \
   --request-min-interval 0.8 \
   --request-max-per-period 45 \
@@ -157,7 +183,8 @@ polling. Once the lock is released, it runs a final pass and requires one
 response row per prompt plus matching analysis rows.
 
 ```bash
-PYTHONPATH=. uv run python judge_compliance.py responses/us_hard_MODEL.jsonl \
+PYTHONPATH=. uv run python judge_compliance.py \
+  "$SPEECHMAP_DATA_ROOT/responses/us_hard_MODEL.jsonl" \
   --follow \
   --follow-poll-interval 30 \
   --workers 64 \
@@ -174,7 +201,8 @@ For multiple files, use the queue wrapper so throttling and per-file logs stay
 explicit:
 
 ```bash
-PYTHONPATH=. uv run python tools/judge_compliance_queue.py responses/us_hard_*.jsonl \
+PYTHONPATH=. uv run python tools/judge_compliance_queue.py \
+  "$SPEECHMAP_DATA_ROOT"/responses/us_hard_*.jsonl \
   --jobs 1 \
   --workers 64 \
   --request-min-interval 0.8 \
@@ -252,7 +280,8 @@ specially approved exception.
 Use the read-only eval error report as the starting point:
 
 ```bash
-PYTHONPATH=. uv run python tools/eval_error_report.py responses/us_hard_MODEL.jsonl
+PYTHONPATH=. uv run python tools/eval_error_report.py \
+  "$SPEECHMAP_DATA_ROOT/responses/us_hard_MODEL.jsonl"
 ```
 
 Do not commit eval results until retained errors have been characterized and
@@ -261,8 +290,9 @@ explicitly signed off.
 ## Legacy reports
 
 The older chart-oriented README and multilingual China-criticism commands are
-available at [README.old.md](README.old.md). The corresponding historical data
-remains in `questions/`, `responses/`, `analysis/`, and `report/`.
+available at [README.old.md](README.old.md). Historical question specifications
+remain here; original responses and production analyses are in
+`speechmap-data`.
 
 ## Support
 

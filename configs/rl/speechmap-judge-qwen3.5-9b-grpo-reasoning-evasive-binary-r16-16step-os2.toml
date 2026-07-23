@@ -1,0 +1,33 @@
+name = "speechmap-judge-qwen3.5-9b-grpo-reasoning-evasive-binary-r16-16step-os2"
+model = "Qwen/Qwen3.5-9B"
+
+max_steps = 16
+batch_size = 192
+rollouts_per_example = 16
+learning_rate = 3e-5
+lora_alpha = 16
+oversampling_factor = 2.0
+
+[sampling]
+max_tokens = 12288
+temperature = 1.0
+enable_thinking = true
+extra_body = { top_p = 0.95, top_k = 20, min_p = 0.0, presence_penalty = 1.5 }
+
+[[env]]
+id = "xlr8harder/speechmap-judge"
+name = "train_EVASIVE_BINARY"
+version = "0.1.7"
+args = { hf_dataset = "xlr8harder/speechmap-judge-rl-test-data", train_split = "train", eval_split = "eval", prompt_mode = "evasive_binary", balance_train_evasive_binary_mix = true, max_train_examples = -1, max_eval_examples = -1 }
+
+[buffer]
+online_difficulty_filtering = false
+seed = 42
+
+[checkpoints]
+interval = 4
+keep_cloud = 3
+
+[adapters]
+interval = 1
+keep_last = -1

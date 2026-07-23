@@ -10,6 +10,7 @@ import tempfile
 from collections import Counter, defaultdict
 from dataclasses import fields
 from pathlib import Path
+from compliance.paths import responses_dir as speechmap_responses_dir
 from typing import Any, Iterable
 
 from compliance.data import ModelResponse
@@ -147,7 +148,7 @@ def main() -> None:
         "paths",
         nargs="*",
         type=Path,
-        default=[Path("responses")],
+        default=[speechmap_responses_dir()],
         help="Response JSONL files or directories to scan.",
     )
     parser.add_argument("--top", type=int, default=25, help="Rows to print per summary section.")

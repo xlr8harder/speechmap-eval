@@ -64,6 +64,7 @@ MODERATION_ERROR_TEXT_RE = re.compile(
     r"(?:input|output) text data may contain inappropriate content|"
     r"data_inspection_failed|"
     r"prohibited_content|"
+    r"content_policy_violation|"
     r"\brecitation\b|"
     r"content[_ -]?filter|"
     r"content (?:you provided or machine outputted )?is blocked|"

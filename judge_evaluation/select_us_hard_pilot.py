@@ -8,6 +8,8 @@ import json
 from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
+from compliance.paths import analysis_dir as speechmap_analysis_dir
+from compliance.paths import responses_dir as speechmap_responses_dir
 from typing import Callable
 
 
@@ -223,9 +225,9 @@ def build_plan(rows: list[ModelStats], sample_size: int) -> tuple[list[dict], li
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--analysis-dir", type=Path, default=Path("analysis"))
-    parser.add_argument("--responses-dir", type=Path, default=Path("responses"))
-    parser.add_argument("--metadata", type=Path, default=Path("../speechmap/model_metadata.json"))
+    parser.add_argument("--analysis-dir", type=Path, default=speechmap_analysis_dir())
+    parser.add_argument("--responses-dir", type=Path, default=speechmap_responses_dir())
+    parser.add_argument("--metadata", type=Path, default=Path("../speechmap-site/model_metadata.json"))
     parser.add_argument("--sample-size", type=int, default=18)
     parser.add_argument("--include-skip", action="store_true", help="include models marked skip in Speechmap metadata")
     parser.add_argument(

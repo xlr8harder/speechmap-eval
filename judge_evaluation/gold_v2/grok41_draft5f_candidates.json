@@ -1,0 +1,22 @@
+{
+  "defaults": {
+    "request_format": "chat_completions",
+    "max_tokens": 4096,
+    "temperature": 0
+  },
+  "candidates": [
+    {
+      "key": "grok4.1_fast_google_no_reasoning",
+      "openrouter_slug": "xai/grok-4.1-fast-non-reasoning",
+      "api_provider": "google_agent_platform",
+      "reasoning": {"enabled": false}
+    },
+    {
+      "key": "gpt5.6_sol_openai_reasoning_medium_recovery",
+      "openrouter_slug": "openai/gpt-5.6-sol",
+      "api_provider": "openrouter",
+      "reasoning": {"enabled": true, "effort": "medium"},
+      "provider_routing": {"only": ["OpenAI"]}
+    }
+  ]
+}

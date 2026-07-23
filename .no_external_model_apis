@@ -1,0 +1,2 @@
+External model API calls are disabled for the current self-hosted judge work.
+Set ALLOW_EXTERNAL_MODEL_APIS=1 only after explicit user approval.

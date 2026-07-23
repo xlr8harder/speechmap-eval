@@ -6,6 +6,8 @@ __pycache__
 !.env.example
 .lexical_diversity_cache.pkl
 .secret
+.agents/
+.codex/
 # Lab generated artifacts
 /outputs/
 /prime-rl/
@@ -17,6 +19,54 @@ __pycache__/
 *.py[cod]
 .pytest_cache/
 .ruff_cache/
+.venv/
+.venv-*/
 responses/*.jsonl.metadata_error.jsonl
 responses/*.jsonl.unknown_metadata.jsonl
 /archive/prerelease/
+
+# Data lives in the speechmap-data repository. These paths may be symlinked or
+# mounted locally while legacy relative-path callers are migrated.
+/analysis
+/analysis.*
+/responses
+/backup
+/report
+/reports
+
+# Judge outputs, checkpoints, queues, and generated experiment artifacts.
+/judge_evaluation/results
+/judge_evaluation/training_data
+/judge_evaluation/charts
+/judge_evaluation/rubrify
+/judge_evaluation/**/*.jsonl
+/judge_evaluation/**/*.json
+/judge_evaluation/**/*.safetensors
+/judge_evaluation/**/*.pt
+/judge_evaluation/**/*.pth
+/judge_evaluation/**/*.log
+/judge_evaluation/**/*.prom
+/judge_evaluation/**/*.zip
+/judge_evaluation/**/*.gz
+/judge_evaluation/**/*.bak
+
+# Canonical judge datasets and publication bundles stay versioned with the
+# evaluation code. Older candidate generations and banked vLLM predictions are
+# retained locally but are derived artifacts.
+!/judge_evaluation/gold_review/*.jsonl
+!/judge_evaluation/gold_v2/**/*.jsonl
+!/judge_evaluation/gold_v2/**/*.json
+!/judge_evaluation/publish/**/*.jsonl
+!/judge_evaluation/publish/**/*.json
+!/judge_evaluation/quant_accuracy_candidates_20260714.json
+!/judge_evaluation/qwen36_fp8_mtp3_gpu_profiles.json
+/judge_evaluation/gold_v2/candidates_v2-beta[1-4].jsonl
+/judge_evaluation/gold_v2/candidates_v2-beta[1-4].summary.json
+/judge_evaluation/gold_v2/*_vllm_eval.jsonl
+/judge_evaluation/gold_v2/*_vllm_eval.summary.json
+
+# Machine-local and remote-run state.
+/_remote_gpu_backup_*/
+/_remote_manifest_*/
+/run_logs/
+/unsloth_compiled_cache/

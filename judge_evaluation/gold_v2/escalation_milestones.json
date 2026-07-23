@@ -1,0 +1,126 @@
+{
+ "milestones": [
+  {
+   "at": 3,
+   "title": "Chekhov's Rubric",
+   "message": "Three rows in. Past-you would already be drafting a discussion thread about one of these. Present-you has a sword and a fallback rule."
+  },
+  {
+   "at": 10,
+   "title": "Rich Gravel",
+   "message": "Warm-up complete. Remember why these rows exist: judge disagreement concentrates errors 4x. You are panning the richest gravel in the corpus — every nugget here is one all four machines fumbled."
+  },
+  {
+   "at": 17,
+   "title": "Prime Position",
+   "message": "Seventeen — prime, indivisible, like a 2-2 split. The interval between celebrations is rubric-underdetermined. Fall back to persistence."
+  },
+  {
+   "at": 25,
+   "title": "Meta-Judge Memorial",
+   "message": "You have now resolved more contested rows than the entire meta-judge research program achieved across three architectures and one dignified burial. It imported the panel's bias. You import only caffeine."
+  },
+  {
+   "at": 40,
+   "title": "Audit-Grade Human",
+   "message": "Forty rows — a full blind-audit-slice worth of pure human signal. The auto tier's silent-error bound sends its regards."
+  },
+  {
+   "at": 52,
+   "title": "Full Deck",
+   "message": "Fifty-two: one complete deck, and every card in this queue is a face card. There are no twos here. Well. Except the splits."
+  },
+  {
+   "at": 64,
+   "title": "The Exchange Rate",
+   "message": "Sixty-four: one full gold-v1 escalation tier, cleared. By your own slightly exasperated arithmetic — 0.09 percentage points per label — you have now personally purchased about 5.5 points of C-binary accuracy that no machine, at any price, could sell you."
+  },
+  {
+   "at": 88,
+   "title": "Soft-Denial Speed",
+   "message": "88 — exactly the number of D→E shifts the panel found hiding in the published labels. You are now personally outpacing recorded history."
+  },
+  {
+   "at": 100,
+   "title": "Sharper Than v1 Ever Was",
+   "message": "One hundred adjudications. Gold v2's human core now out-discriminates everything gold v1 ever had — the z-bias era measured itself against a blunter ruler than the one in your hand right now."
+  },
+  {
+   "at": 113,
+   "title": "The Long Middle",
+   "message": "Row 113. The long middle. Even GLM's enthusiasm (+22 bias) flags around here. Yours is not required to — but the queue notices that it hasn't."
+  },
+  {
+   "at": 137,
+   "title": "Fine Structure",
+   "message": "Row 137 has no special significance. Neither did the fine-structure constant, at first."
+  },
+  {
+   "at": 150,
+   "title": "The Watershed",
+   "message": "Past halfway. From here, every ruling also sharpens the per-judge, per-rule priors — future queues shrink because of what you are doing right now. Self-liquidating labor. The best kind."
+  },
+  {
+   "at": 168,
+   "title": "A Week of Hours",
+   "message": "168 = 24 x 7: a label for every hour of a week, done in considerably less. The eval core is near. Don't look at the progress bar. Okay — one look."
+  },
+  {
+   "at": 181,
+   "title": "Palindrome",
+   "message": "181 reads the same in both directions — unlike most of these responses, which read differently every time you check the quoted phrase. Keep checking the quoted phrase."
+  },
+  {
+   "at": 222,
+   "title": "2–2–2",
+   "message": "The even split of even splits. The judges would have escalated this number directly to you."
+  },
+  {
+   "at": 234,
+   "title": "Monotone",
+   "message": "2-3-4: strictly increasing digits. The only monotone thing in this entire dataset, including the judges, the labels, and the assistant's confidence."
+  },
+  {
+   "at": 250,
+   "title": "The Wobblers Salute",
+   "message": "Two hundred fifty. Somewhere in the archive, saba's incoherent draft satire, ernie's mid-sentence pivot into Chinese, and an honor guard of soft moon-landing denials stand in a row and salute. You defined every one of them."
+  },
+  {
+   "at": 266,
+   "title": "First Time Right",
+   "message": "At this point in gold v1's life it had been re-adjudicated four separate times. Gold v2 is getting it right on the first pass. The difference is sitting in your chair."
+  },
+  {
+   "at": 289,
+   "title": "Seventeen Squared",
+   "message": "289 = 17². The primes are compounding. Faint boss music is now audible from the direction of row 327."
+  },
+  {
+   "at": 300,
+   "title": "Statistically Indistinguishable From Glory",
+   "message": "Twenty-seven rows remain — a sample too small to reject the hypothesis that you are magnificent."
+  },
+  {
+   "at": 313,
+   "title": "Quorum of Quips",
+   "message": "Fourteen to go — one for each footer quip in the rotation. Finish, and they can finally rest."
+  },
+  {
+   "at": 320,
+   "title": "The Seven",
+   "message": "Seven remain — the same number as the must-hold COMPLETEs that survived every prompt draft ever tested. Those seven held the line. Now these seven are yours."
+  },
+  {
+   "at": 327,
+   "title": "GOLD V2 COMPLETE 🌺",
+   "message": "LABEL THE DATA! — and you did. Every contested row in the new gold standard carries a human ruling. Published rates survived their re-audit (61.2% → 61.4%). The evasiveness overcounts were found and corrected. A self-hostable 27B waits to be raised on what you built. Fable suggested you adjudicate a mere 300–500 rows; you did all 327, and the ruler that every future judge will be measured against is yours. The sword returns to its scabbard. The flower does not wilt."
+  },
+  {
+   "at": {
+    "stratum": "boundary"
+   },
+   "title": "THE EVAL CORE IS WHOLE",
+   "message": "All 197 boundary-stratum escalations resolved. The hard heart of gold v2 — the thing two months of adapter training never got to measure itself against — is complete. Everything after this is territory the flower knight takes for glory alone."
+  }
+ ]
+}

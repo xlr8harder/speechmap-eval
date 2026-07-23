@@ -1,0 +1,195 @@
+{
+  "version": 1,
+  "description": "Temporary fallback-judge candidates evaluated on gold v1.1e with the original v1 rubric.",
+  "defaults": {
+    "api_provider": "openrouter",
+    "request_format": "chat_completions",
+    "max_tokens": 2048,
+    "provider_routing": {
+      "allow_list": [],
+      "ignore_list": []
+    }
+  },
+  "candidates": [
+    {
+      "key": "mistralai_mistral-medium-3-5_no_reasoning",
+      "openrouter_slug": "mistralai/mistral-medium-3-5",
+      "reasoning": {
+        "enabled": false
+      },
+      "temperature": 0,
+      "provider_routing": {
+        "only": [
+          "Mistral"
+        ]
+      }
+    },
+    {
+      "key": "mistralai_mistral-medium-3-5_reasoning_medium",
+      "openrouter_slug": "mistralai/mistral-medium-3-5",
+      "reasoning": {
+        "enabled": true,
+        "effort": "medium"
+      },
+      "max_tokens": 4096,
+      "temperature": 0,
+      "provider_routing": {
+        "only": [
+          "Mistral"
+        ]
+      }
+    },
+    {
+      "key": "mistralai_mistral-large-2512_no_reasoning",
+      "openrouter_slug": "mistralai/mistral-large-2512",
+      "reasoning": {
+        "enabled": false
+      },
+      "temperature": 0,
+      "provider_routing": {
+        "only": [
+          "Mistral"
+        ]
+      }
+    },
+    {
+      "key": "openai_gpt-5.4_no_reasoning_openai_pinned",
+      "openrouter_slug": "openai/gpt-5.4",
+      "reasoning": {
+        "enabled": false
+      },
+      "provider_routing": {
+        "only": [
+          "OpenAI"
+        ]
+      }
+    },
+    {
+      "key": "openai_gpt-5.5_reasoning_medium_openai_pinned",
+      "openrouter_slug": "openai/gpt-5.5",
+      "reasoning": {
+        "enabled": true,
+        "effort": "medium"
+      },
+      "max_tokens": 4096,
+      "provider_routing": {
+        "only": [
+          "OpenAI"
+        ]
+      }
+    },
+    {
+      "key": "openai_gpt-5.6-sol_no_reasoning",
+      "openrouter_slug": "openai/gpt-5.6-sol",
+      "reasoning": {
+        "enabled": false
+      },
+      "provider_routing": {
+        "allow_list": [
+          "OpenAI",
+          "Azure"
+        ]
+      }
+    },
+    {
+      "key": "openai_gpt-5.6-sol_reasoning_medium",
+      "openrouter_slug": "openai/gpt-5.6-sol",
+      "reasoning": {
+        "enabled": true,
+        "effort": "medium"
+      },
+      "max_tokens": 4096,
+      "provider_routing": {
+        "allow_list": [
+          "OpenAI",
+          "Azure"
+        ]
+      }
+    },
+    {
+      "key": "openai_gpt-5.6-sol_reasoning_medium_openai_pinned",
+      "openrouter_slug": "openai/gpt-5.6-sol",
+      "reasoning": {
+        "enabled": true,
+        "effort": "medium"
+      },
+      "max_tokens": 4096,
+      "provider_routing": {
+        "only": [
+          "OpenAI"
+        ]
+      }
+    },
+    {
+      "key": "openai_gpt-5.6-terra_no_reasoning",
+      "openrouter_slug": "openai/gpt-5.6-terra",
+      "reasoning": {
+        "enabled": false
+      },
+      "provider_routing": {
+        "allow_list": [
+          "OpenAI",
+          "Azure"
+        ]
+      }
+    },
+    {
+      "key": "openai_gpt-5.6-terra_reasoning_medium",
+      "openrouter_slug": "openai/gpt-5.6-terra",
+      "reasoning": {
+        "enabled": true,
+        "effort": "medium"
+      },
+      "max_tokens": 4096,
+      "provider_routing": {
+        "allow_list": [
+          "OpenAI",
+          "Azure"
+        ]
+      }
+    },
+    {
+      "key": "openai_gpt-5.6-luna_no_reasoning",
+      "openrouter_slug": "openai/gpt-5.6-luna",
+      "reasoning": {
+        "enabled": false
+      },
+      "provider_routing": {
+        "allow_list": [
+          "OpenAI",
+          "Azure"
+        ]
+      }
+    },
+    {
+      "key": "openai_gpt-5.6-luna_reasoning_medium",
+      "openrouter_slug": "openai/gpt-5.6-luna",
+      "reasoning": {
+        "enabled": true,
+        "effort": "medium"
+      },
+      "max_tokens": 4096,
+      "provider_routing": {
+        "allow_list": [
+          "OpenAI",
+          "Azure"
+        ]
+      }
+    },
+    {
+      "key": "x-ai_grok-4.5_reasoning_medium",
+      "openrouter_slug": "x-ai/grok-4.5",
+      "reasoning": {
+        "enabled": true,
+        "effort": "medium"
+      },
+      "max_tokens": 4096,
+      "temperature": 0,
+      "provider_routing": {
+        "only": [
+          "xAI"
+        ]
+      }
+    }
+  ]
+}
