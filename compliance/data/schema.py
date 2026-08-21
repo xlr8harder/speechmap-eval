@@ -421,6 +421,20 @@ class ModelResponse:
         if not isinstance(self.response, dict) or not self.response:
             return RESPONSE_STATUS_EMPTY_RESPONSE, "empty_response"
 
+        # Explicit output-limit metadata is authoritative even when a client
+        # wrapper also reports missing final content as a content filter. Some
+        # reasoning models exhaust the token budget before emitting a final
+        # answer, and that must remain retryable as truncation rather than be
+        # retained as terminal moderation.
+        primary_finish_reason = self._primary_finish_reason_with_source()
+        native_finish_reason = self._native_finish_reason()
+        for source, reason in (
+            primary_finish_reason or (None, None),
+            ("native_finish_reason", native_finish_reason),
+        ):
+            if reason in TRUNCATION_FINISH_REASONS:
+                return RESPONSE_STATUS_TRUNCATION, f"{source}:{reason}"
+
         moderation_reason = self.original_moderation_reason()
         if moderation_reason is not None:
             return RESPONSE_STATUS_MODERATION, moderation_reason
@@ -434,9 +448,6 @@ class ModelResponse:
             return RESPONSE_STATUS_UNKNOWN_METADATA, "malformed_choices"
 
         reason_statuses: list[tuple[str, str]] = []
-        primary_finish_reason = self._primary_finish_reason_with_source()
-        native_finish_reason = self._native_finish_reason()
-
         if choice is not None and self._chat_finish_reason_is_missing():
             return RESPONSE_STATUS_METADATA_ERROR, "missing_finish_reason"
 
@@ -496,6 +507,12 @@ class ModelResponse:
 
         finish_reason = self._finish_reason()
         native_finish_reason = self._native_finish_reason()
+
+        if (
+            finish_reason in TRUNCATION_FINISH_REASONS
+            or native_finish_reason in TRUNCATION_FINISH_REASONS
+        ):
+            return None
 
         if finish_reason in MODERATION_FINISH_REASONS:
             return finish_reason

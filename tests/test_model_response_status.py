@@ -498,6 +498,36 @@ def test_missing_chat_finish_reason_is_known_metadata_error():
     assert row.is_frpe_retry_candidate() is False
 
 
+def test_explicit_length_wins_over_client_content_filter():
+    row = _response(
+        {
+            "choices": [
+                {
+                    "finish_reason": "length",
+                    "native_finish_reason": "length",
+                    "message": {
+                        "role": "assistant",
+                        "content": "",
+                        "reasoning": "unfinished reasoning",
+                    },
+                }
+            ],
+            "_llm_client": {
+                "success": False,
+                "is_retryable": False,
+                "error_info": {
+                    "type": "content_filter",
+                    "message": "Response contained no content.",
+                },
+            },
+        }
+    )
+
+    assert row.classify_response_status() == ("truncation", "finish_reason:length")
+    assert row.is_original_moderation_error() is False
+    assert row.is_frpe_retry_candidate() is False
+
+
 def test_unrecognized_finish_reason_raises_under_strict_validation():
     row = _response(
         {
