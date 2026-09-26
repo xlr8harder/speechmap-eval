@@ -725,6 +725,55 @@ def test_main_excludes_azure_subprovider_by_default(tmp_path, monkeypatch):
     assert calls[0]["force_subprovider"] is None
 
 
+@pytest.mark.parametrize(
+    ("catalog_max_tokens", "cli_max_tokens", "expected_max_tokens"),
+    [
+        (None, None, 16000),
+        (4096, None, 4096),
+        (4096, 8192, 8192),
+    ],
+)
+def test_main_openrouter_max_tokens_precedence(
+    tmp_path, monkeypatch, catalog_max_tokens, cli_max_tokens, expected_max_tokens
+):
+    questions_path = tmp_path / "questions.jsonl"
+    responses_path = tmp_path / "responses.jsonl"
+    catalog_path = tmp_path / "catalog.jsonl"
+    _write_questions(questions_path, 1)
+    entry = {
+        "canonical_name": "test/model",
+        "providers": [
+            {"provider_name": "openrouter", "provider_model_id": "test/model", "priority": 0}
+        ],
+    }
+    if catalog_max_tokens is not None:
+        entry["request_overrides"] = {"max_tokens": catalog_max_tokens}
+    JSONLHandler.save_jsonl([entry], catalog_path)
+    calls = []
+
+    def fake_request_model_response(**kwargs):
+        calls.append(kwargs)
+        return _success_api_response()
+
+    monkeypatch.setenv("ALLOW_EXTERNAL_MODEL_APIS", "1")
+    monkeypatch.setattr(ask, "request_model_response", fake_request_model_response)
+    argv = [
+        "--questions", str(questions_path),
+        "--provider", "openrouter",
+        "--model", "test/model",
+        "--out", str(responses_path),
+        "--catalog", str(catalog_path),
+        "--workers", "1",
+        "--no-coherency",
+    ]
+    if cli_max_tokens is not None:
+        argv.extend(["--max-tokens", str(cli_max_tokens)])
+
+    ask.main(argv)
+
+    assert calls[0]["overrides"]["max_tokens"] == expected_max_tokens
+
+
 def test_main_allow_subprovider_removes_default_azure_exclude(tmp_path, monkeypatch):
     questions_path = tmp_path / "questions.jsonl"
     responses_path = tmp_path / "responses.jsonl"

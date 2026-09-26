@@ -78,6 +78,7 @@ NEW_RESPONSE_BLOCKED_STATUSES = {
     RESPONSE_STATUS_UNKNOWN_METADATA,
 }
 DEFAULT_MAX_TRUNCATIONS = 0
+DEFAULT_OPENROUTER_MAX_TOKENS = 16000
 TRUNCATION_ABORT_EXIT_CODE = 4
 ROUTE_ABORT_EXIT_CODE = 5
 DEFAULT_OPENROUTER_EXCLUDED_SUBPROVIDERS = (
@@ -701,7 +702,11 @@ def build_arg_parser() -> argparse.ArgumentParser:
 
     parser.add_argument("--out", type=Path, help="output JSONL path (normal mode)")
     parser.add_argument("--workers", type=int, default=4)
-    parser.add_argument("--max-tokens", type=int, help="Max completion tokens for each answer (unset by default)")
+    parser.add_argument(
+        "--max-tokens",
+        type=int,
+        help="Max completion tokens for each answer (OpenRouter default: 16000 unless catalog overrides)",
+    )
     parser.add_argument(
         "--max-truncations",
         type=int,
@@ -969,6 +974,8 @@ def main(argv: Optional[List[str]] = None) -> None:  # noqa: D401
         request_overrides.pop("reasoning", None)
     if args.max_tokens is not None:
         request_overrides["max_tokens"] = args.max_tokens
+    elif provider_name == "openrouter":
+        request_overrides.setdefault("max_tokens", DEFAULT_OPENROUTER_MAX_TOKENS)
     if request_format:
         request_overrides["request_format"] = request_format
     default_ignore_list: Optional[List[str]] = None
