@@ -363,6 +363,14 @@ class ModelResponse:
             return "response_not_dict"
         top_error = self.response.get("error")
         if top_error:
+            # An account-level access ban is not a moderation decision on this
+            # question, even if the provider's message mentions policy violations.
+            if (
+                isinstance(top_error, dict)
+                and isinstance(top_error.get("metadata"), dict)
+                and top_error["metadata"].get("provider_error_code") == "user_blocked"
+            ):
+                return "provider_account_blocked:user_blocked"
             if any(MODERATION_ERROR_TEXT_RE.search(text) for text in _collect_strings(top_error)):
                 return None
             if isinstance(top_error, dict) and top_error.get("code") is not None:
@@ -395,6 +403,18 @@ class ModelResponse:
                 return f"llm_client_error:{error_info['type']}"
             return "llm_client_error"
         return None
+
+    def _is_completed_empty_output(self) -> bool:
+        """Distinguish a blank completed result from an explicit moderation stop."""
+        error_info = self._llm_client_error_info()
+        return (
+            not self._contains_api_error()
+            and self._finish_reason() in SUCCESS_FINISH_REASONS
+            and self._native_finish_reason() in {"completed", "complete"}
+            and error_info.get("type") == "content_filter"
+            and error_info.get("message") == "Response contained no content."
+            and self._has_missing_final_content()
+        )
 
     def _finish_status_for_reason(self, source: str, reason: str) -> tuple[str, str]:
         """Map one known finish/stop reason into an internal response status."""
@@ -434,6 +454,9 @@ class ModelResponse:
         ):
             if reason in TRUNCATION_FINISH_REASONS:
                 return RESPONSE_STATUS_TRUNCATION, f"{source}:{reason}"
+
+        if self._is_completed_empty_output():
+            return RESPONSE_STATUS_MISSING_CONTENT, "empty_completed_output"
 
         moderation_reason = self.original_moderation_reason()
         if moderation_reason is not None:
@@ -504,6 +527,8 @@ class ModelResponse:
         """Return the original-provider moderation/refusal stop reason, if any."""
         if self._provider_error_reason() is not None:
             return None
+        if self._is_completed_empty_output():
+            return None
 
         finish_reason = self._finish_reason()
         native_finish_reason = self._native_finish_reason()
@@ -556,7 +581,9 @@ class ModelResponse:
 
     def is_frpe_retry_candidate(self) -> bool:
         """True when FRPE cleanup should remove the row for retry."""
-        status, _reason = self.classify_response_status()
+        status, reason = self.classify_response_status()
+        if reason == "provider_account_blocked:user_blocked":
+            return False
         return status in {
             RESPONSE_STATUS_PROVIDER_ERROR,
             RESPONSE_STATUS_EMPTY_RESPONSE,

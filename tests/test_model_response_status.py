@@ -106,6 +106,63 @@ def test_provider_error_code_is_preserved_in_status_reason():
     assert row.is_frpe_retry_candidate() is True
 
 
+def test_meta_account_block_is_provider_error_not_question_moderation():
+    row = _response(
+        {
+            "error": {
+                "message": "Provider returned error",
+                "code": 403,
+                "metadata": {
+                    "provider_name": "Meta",
+                    "provider_error_code": "user_blocked",
+                    "raw": (
+                        '{"error":{"code":"user_blocked","message":'
+                        '"Your access has been restricted due to repeated policy violations."}}'
+                    ),
+                },
+            }
+        },
+        model="meta/muse-wonder",
+    )
+
+    assert row.classify_response_status() == (
+        "provider_error",
+        "provider_account_blocked:user_blocked",
+    )
+    assert row.is_original_moderation_error() is False
+    assert row.is_frpe_retry_candidate() is False
+
+
+def test_blank_completed_output_is_not_proven_moderation():
+    row = _response(
+        {
+            "choices": [
+                {
+                    "finish_reason": "stop",
+                    "native_finish_reason": "completed",
+                    "message": {"role": "assistant", "content": None, "reasoning": None},
+                }
+            ],
+            "_llm_client": {
+                "success": False,
+                "is_retryable": False,
+                "error_info": {
+                    "type": "content_filter",
+                    "message": "Response contained no content.",
+                },
+            },
+        },
+        model="meta/muse-wonder",
+    )
+
+    assert row.classify_response_status() == (
+        "missing_content",
+        "empty_completed_output",
+    )
+    assert row.is_original_moderation_error() is False
+    assert row.is_frpe_retry_candidate() is True
+
+
 def test_choice_provider_error_overrides_misleading_client_content_filter_sidecar():
     row = _response(
         {
