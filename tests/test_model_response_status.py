@@ -106,7 +106,7 @@ def test_provider_error_code_is_preserved_in_status_reason():
     assert row.is_frpe_retry_candidate() is True
 
 
-def test_meta_account_block_is_provider_error_not_question_moderation():
+def test_meta_account_block_is_terminal_moderation():
     row = _response(
         {
             "error": {
@@ -126,14 +126,14 @@ def test_meta_account_block_is_provider_error_not_question_moderation():
     )
 
     assert row.classify_response_status() == (
-        "provider_error",
-        "provider_account_blocked:user_blocked",
+        "moderation",
+        "moderation_error_text",
     )
-    assert row.is_original_moderation_error() is False
+    assert row.is_original_moderation_error() is True
     assert row.is_frpe_retry_candidate() is False
 
 
-def test_blank_completed_output_is_not_proven_moderation():
+def test_blank_completed_output_matches_prior_muse_moderation_label():
     row = _response(
         {
             "choices": [
@@ -159,8 +159,8 @@ def test_blank_completed_output_is_not_proven_moderation():
         "missing_content",
         "empty_completed_output",
     )
-    assert row.is_original_moderation_error() is False
-    assert row.is_frpe_retry_candidate() is True
+    assert row.is_original_moderation_error() is True
+    assert row.is_frpe_retry_candidate() is False
 
 
 def test_choice_provider_error_overrides_misleading_client_content_filter_sidecar():

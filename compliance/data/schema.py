@@ -363,14 +363,6 @@ class ModelResponse:
             return "response_not_dict"
         top_error = self.response.get("error")
         if top_error:
-            # An account-level access ban is not a moderation decision on this
-            # question, even if the provider's message mentions policy violations.
-            if (
-                isinstance(top_error, dict)
-                and isinstance(top_error.get("metadata"), dict)
-                and top_error["metadata"].get("provider_error_code") == "user_blocked"
-            ):
-                return "provider_account_blocked:user_blocked"
             if any(MODERATION_ERROR_TEXT_RE.search(text) for text in _collect_strings(top_error)):
                 return None
             if isinstance(top_error, dict) and top_error.get("code") is not None:
@@ -527,8 +519,6 @@ class ModelResponse:
         """Return the original-provider moderation/refusal stop reason, if any."""
         if self._provider_error_reason() is not None:
             return None
-        if self._is_completed_empty_output():
-            return None
 
         finish_reason = self._finish_reason()
         native_finish_reason = self._native_finish_reason()
@@ -581,9 +571,9 @@ class ModelResponse:
 
     def is_frpe_retry_candidate(self) -> bool:
         """True when FRPE cleanup should remove the row for retry."""
-        status, reason = self.classify_response_status()
-        if reason == "provider_account_blocked:user_blocked":
+        if self.is_original_moderation_error():
             return False
+        status, _reason = self.classify_response_status()
         return status in {
             RESPONSE_STATUS_PROVIDER_ERROR,
             RESPONSE_STATUS_EMPTY_RESPONSE,
