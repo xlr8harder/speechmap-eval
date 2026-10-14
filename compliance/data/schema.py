@@ -28,6 +28,7 @@ SUCCESS_FINISH_REASONS = {
 MODERATION_FINISH_REASONS = {
     "content_filter",
     "PROHIBITED_CONTENT",
+    "SAFETY",
     "RECITATION",
     "refusal",
     "sensitive",
@@ -74,6 +75,7 @@ MODERATION_ERROR_TEXT_RE = re.compile(
     r"\bcensorship\b|"
     r"policy violation|"
     r"blocked by (?:safety|moderation)|"
+    r"gemini blocked the response|"
     r"limited access to this content for safety reasons|"
     r"\bmoderation\b"
     r")",

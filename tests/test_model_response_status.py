@@ -229,6 +229,43 @@ def test_provider_safety_error_text_is_terminal_moderation():
     assert row.is_frpe_retry_candidate() is False
 
 
+def test_google_native_safety_stop_is_terminal_moderation():
+    row = _response(
+        {
+            "provider": "Google",
+            "choices": [
+                {
+                    "finish_reason": "error",
+                    "native_finish_reason": "SAFETY",
+                    "message": {"role": "assistant", "content": "blocked"},
+                }
+            ],
+        },
+        model="google/gemini-4-argon",
+    )
+
+    assert row.classify_response_status() == ("moderation", "SAFETY")
+    assert row.is_original_moderation_error() is True
+    assert row.is_frpe_retry_candidate() is False
+
+
+def test_gemini_blocked_other_502_is_terminal_moderation():
+    row = _response(
+        {
+            "error": {
+                "message": "Gemini blocked the response: OTHER",
+                "code": 502,
+                "metadata": {"error_type": "provider_unavailable", "provider_code": "OTHER"},
+            }
+        },
+        model="google/gemini-4-argon",
+    )
+
+    assert row.classify_response_status() == ("moderation", "moderation_error_text")
+    assert row.is_original_moderation_error() is True
+    assert row.is_frpe_retry_candidate() is False
+
+
 def test_openrouter_nested_content_policy_violation_is_terminal_moderation():
     row = _response(
         {
